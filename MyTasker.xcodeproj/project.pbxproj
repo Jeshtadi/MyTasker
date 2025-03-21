@@ -1,0 +1,643 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2779F7772D41ABB7004654DB /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2779F7762D41ABB7004654DB /* FirebaseAuth */; };
+		2779F7792D41ABB7004654DB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2779F7782D41ABB7004654DB /* FirebaseFirestore */; };
+		27C8EDAC2D59771A0081899B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 27C8EDAB2D59771A0081899B /* GoogleGenerativeAI */; };
+		27D309EC2D761532002F6850 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 27D309EB2D761532002F6850 /* GoogleGenerativeAI */; };
+		27E9F38B2D7DE39F00B0B28B /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 27E9F38A2D7DE39F00B0B28B /* FSCalendar */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2779F7592D41A8CF004654DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2779F7402D41A8CC004654DB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2779F7472D41A8CC004654DB;
+			remoteInfo = MyTasker;
+		};
+		2779F7632D41A8CF004654DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2779F7402D41A8CC004654DB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2779F7472D41A8CC004654DB;
+			remoteInfo = MyTasker;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2779F7482D41A8CC004654DB /* MyTasker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyTasker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2779F7582D41A8CF004654DB /* MyTaskerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyTaskerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2779F7622D41A8CF004654DB /* MyTaskerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyTaskerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2779F74A2D41A8CC004654DB /* MyTasker */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MyTasker;
+			sourceTree = "<group>";
+		};
+		2779F75B2D41A8CF004654DB /* MyTaskerTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MyTaskerTests;
+			sourceTree = "<group>";
+		};
+		2779F7652D41A8CF004654DB /* MyTaskerUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MyTaskerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2779F7452D41A8CC004654DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27C8EDAC2D59771A0081899B /* GoogleGenerativeAI in Frameworks */,
+				27E9F38B2D7DE39F00B0B28B /* FSCalendar in Frameworks */,
+				2779F7772D41ABB7004654DB /* FirebaseAuth in Frameworks */,
+				2779F7792D41ABB7004654DB /* FirebaseFirestore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2779F7552D41A8CF004654DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27D309EC2D761532002F6850 /* GoogleGenerativeAI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2779F75F2D41A8CF004654DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2779F73F2D41A8CC004654DB = {
+			isa = PBXGroup;
+			children = (
+				2779F74A2D41A8CC004654DB /* MyTasker */,
+				2779F75B2D41A8CF004654DB /* MyTaskerTests */,
+				2779F7652D41A8CF004654DB /* MyTaskerUITests */,
+				2779F7492D41A8CC004654DB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2779F7492D41A8CC004654DB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2779F7482D41A8CC004654DB /* MyTasker.app */,
+				2779F7582D41A8CF004654DB /* MyTaskerTests.xctest */,
+				2779F7622D41A8CF004654DB /* MyTaskerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2779F7472D41A8CC004654DB /* MyTasker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2779F76C2D41A8CF004654DB /* Build configuration list for PBXNativeTarget "MyTasker" */;
+			buildPhases = (
+				2779F7442D41A8CC004654DB /* Sources */,
+				2779F7452D41A8CC004654DB /* Frameworks */,
+				2779F7462D41A8CC004654DB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2779F74A2D41A8CC004654DB /* MyTasker */,
+			);
+			name = MyTasker;
+			packageProductDependencies = (
+				2779F7762D41ABB7004654DB /* FirebaseAuth */,
+				2779F7782D41ABB7004654DB /* FirebaseFirestore */,
+				27C8EDAB2D59771A0081899B /* GoogleGenerativeAI */,
+				27E9F38A2D7DE39F00B0B28B /* FSCalendar */,
+			);
+			productName = MyTasker;
+			productReference = 2779F7482D41A8CC004654DB /* MyTasker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2779F7572D41A8CF004654DB /* MyTaskerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2779F76F2D41A8CF004654DB /* Build configuration list for PBXNativeTarget "MyTaskerTests" */;
+			buildPhases = (
+				2779F7542D41A8CF004654DB /* Sources */,
+				2779F7552D41A8CF004654DB /* Frameworks */,
+				2779F7562D41A8CF004654DB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2779F75A2D41A8CF004654DB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2779F75B2D41A8CF004654DB /* MyTaskerTests */,
+			);
+			name = MyTaskerTests;
+			packageProductDependencies = (
+				27D309EB2D761532002F6850 /* GoogleGenerativeAI */,
+			);
+			productName = MyTaskerTests;
+			productReference = 2779F7582D41A8CF004654DB /* MyTaskerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2779F7612D41A8CF004654DB /* MyTaskerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2779F7722D41A8CF004654DB /* Build configuration list for PBXNativeTarget "MyTaskerUITests" */;
+			buildPhases = (
+				2779F75E2D41A8CF004654DB /* Sources */,
+				2779F75F2D41A8CF004654DB /* Frameworks */,
+				2779F7602D41A8CF004654DB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2779F7642D41A8CF004654DB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2779F7652D41A8CF004654DB /* MyTaskerUITests */,
+			);
+			name = MyTaskerUITests;
+			packageProductDependencies = (
+			);
+			productName = MyTaskerUITests;
+			productReference = 2779F7622D41A8CF004654DB /* MyTaskerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2779F7402D41A8CC004654DB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1610;
+				TargetAttributes = {
+					2779F7472D41A8CC004654DB = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					2779F7572D41A8CF004654DB = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 2779F7472D41A8CC004654DB;
+					};
+					2779F7612D41A8CF004654DB = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 2779F7472D41A8CC004654DB;
+					};
+				};
+			};
+			buildConfigurationList = 2779F7432D41A8CC004654DB /* Build configuration list for PBXProject "MyTasker" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2779F73F2D41A8CC004654DB;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2779F7752D41ABB7004654DB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				27C8EDA22D595FDB0081899B /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+				27E9F3892D7DE39F00B0B28B /* XCRemoteSwiftPackageReference "FSCalendar" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2779F7492D41A8CC004654DB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2779F7472D41A8CC004654DB /* MyTasker */,
+				2779F7572D41A8CF004654DB /* MyTaskerTests */,
+				2779F7612D41A8CF004654DB /* MyTaskerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2779F7462D41A8CC004654DB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2779F7562D41A8CF004654DB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2779F7602D41A8CF004654DB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2779F7442D41A8CC004654DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2779F7542D41A8CF004654DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2779F75E2D41A8CF004654DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2779F75A2D41A8CF004654DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2779F7472D41A8CC004654DB /* MyTasker */;
+			targetProxy = 2779F7592D41A8CF004654DB /* PBXContainerItemProxy */;
+		};
+		2779F7642D41A8CF004654DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2779F7472D41A8CC004654DB /* MyTasker */;
+			targetProxy = 2779F7632D41A8CF004654DB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2779F76A2D41A8CF004654DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2779F76B2D41A8CF004654DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2779F76D2D41A8CF004654DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MyTasker/Preview Content\"";
+				DEVELOPMENT_TEAM = N84M75CZ85;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anushya.MyTasker.MyTasker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2779F76E2D41A8CF004654DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MyTasker/Preview Content\"";
+				DEVELOPMENT_TEAM = N84M75CZ85;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anushya.MyTasker.MyTasker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2779F7702D41A8CF004654DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N84M75CZ85;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anushya.MyTasker.MyTaskerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyTasker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyTasker";
+			};
+			name = Debug;
+		};
+		2779F7712D41A8CF004654DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N84M75CZ85;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anushya.MyTasker.MyTaskerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyTasker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyTasker";
+			};
+			name = Release;
+		};
+		2779F7732D41A8CF004654DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N84M75CZ85;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anushya.MyTasker.MyTaskerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MyTasker;
+			};
+			name = Debug;
+		};
+		2779F7742D41A8CF004654DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N84M75CZ85;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anushya.MyTasker.MyTaskerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MyTasker;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2779F7432D41A8CC004654DB /* Build configuration list for PBXProject "MyTasker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2779F76A2D41A8CF004654DB /* Debug */,
+				2779F76B2D41A8CF004654DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2779F76C2D41A8CF004654DB /* Build configuration list for PBXNativeTarget "MyTasker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2779F76D2D41A8CF004654DB /* Debug */,
+				2779F76E2D41A8CF004654DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2779F76F2D41A8CF004654DB /* Build configuration list for PBXNativeTarget "MyTaskerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2779F7702D41A8CF004654DB /* Debug */,
+				2779F7712D41A8CF004654DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2779F7722D41A8CF004654DB /* Build configuration list for PBXNativeTarget "MyTaskerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2779F7732D41A8CF004654DB /* Debug */,
+				2779F7742D41A8CF004654DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2779F7752D41ABB7004654DB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.7.0;
+			};
+		};
+		27C8EDA22D595FDB0081899B /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+		27E9F3892D7DE39F00B0B28B /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2779F7762D41ABB7004654DB /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2779F7752D41ABB7004654DB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		2779F7782D41ABB7004654DB /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2779F7752D41ABB7004654DB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		27C8EDAB2D59771A0081899B /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27C8EDA22D595FDB0081899B /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
+		27D309EB2D761532002F6850 /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27C8EDA22D595FDB0081899B /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
+		27E9F38A2D7DE39F00B0B28B /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27E9F3892D7DE39F00B0B28B /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2779F7402D41A8CC004654DB /* Project object */;
+}
