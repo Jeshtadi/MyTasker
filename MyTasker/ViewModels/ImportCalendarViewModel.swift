@@ -294,6 +294,64 @@ class ImportCalendarViewModel: ObservableObject {
                 return cleanedDescription
             }
 
+//    private func parseICS(_ icsString: String) -> [MoodleEvent] {
+//        let lines = icsString.components(separatedBy: "\n")
+//        var event: [String: String] = [:]
+//        var events: [MoodleEvent] = []
+//        var currentDescription = ""
+//        var isCollectingDescription = false
+//
+//        for line in lines {
+//            if line.hasPrefix("BEGIN:VEVENT") {
+//                event = [:]
+//                currentDescription = ""
+//                isCollectingDescription = false
+//            } else if line.hasPrefix("END:VEVENT") {
+//                if let id = event["UID"],
+//                   let title = event["SUMMARY"],
+//                   let startDateStr = event["DTSTART"],
+//                   let endDateStr = event["DTEND"],
+//                   let startDate = parseDate(startDateStr),
+//                   let endDate = parseDate(endDateStr) {
+//
+//                    // Clean up description before storing
+//                    currentDescription = cleanDescription(currentDescription)
+//
+//                    let moodleEvent = MoodleEvent(
+//                        id: id,
+//                        title: title,
+//                        startDate: startDate.timeIntervalSince1970,
+//                        endDate: endDate.timeIntervalSince1970,
+//                        description: currentDescription.isEmpty ? "No description" : currentDescription,
+//                        notifyBefore: nil
+//                    )
+//
+//                    events.append(moodleEvent)
+//                }
+//            } else {
+//                let parts = line.split(separator: ":", maxSplits: 1)
+//                if parts.count == 2 {
+//                    let key = String(parts[0]).trimmingCharacters(in: .whitespaces)
+//                    let value = String(parts[1]).trimmingCharacters(in: .whitespaces)
+//
+//                    if key == "DESCRIPTION" {
+//                        // Start collecting the description
+//                        currentDescription = value
+//                        isCollectingDescription = true
+//                    } else {
+//                        event[key] = value
+//                        isCollectingDescription = false
+//                    }
+//                } else if isCollectingDescription {
+//                    // Handle multi-line description (continued on next line)
+//                    currentDescription += " " + line.trimmingCharacters(in: .whitespaces)
+//                }
+//            }
+//        }
+//        return events
+//    }
+    
+    
     private func parseICS(_ icsString: String) -> [MoodleEvent] {
         let lines = icsString.components(separatedBy: "\n")
         var event: [String: String] = [:]
@@ -313,10 +371,8 @@ class ImportCalendarViewModel: ObservableObject {
                    let endDateStr = event["DTEND"],
                    let startDate = parseDate(startDateStr),
                    let endDate = parseDate(endDateStr) {
-
-                    // Clean up description before storing
-                    currentDescription = cleanDescription(currentDescription)
-
+                    
+                    // Create event with raw description first
                     let moodleEvent = MoodleEvent(
                         id: id,
                         title: title,
@@ -326,7 +382,20 @@ class ImportCalendarViewModel: ObservableObject {
                         notifyBefore: nil
                     )
 
-                    events.append(moodleEvent)
+                    // Convert description to attributed format using the struct function
+                    let attributedDescription = moodleEvent.attributedDescription().string
+                    
+                    // Create a new MoodleEvent with the cleaned description
+                    let finalEvent = MoodleEvent(
+                        id: moodleEvent.id,
+                        title: moodleEvent.title,
+                        startDate: moodleEvent.startDate,
+                        endDate: moodleEvent.endDate,
+                        description: attributedDescription,
+                        notifyBefore: moodleEvent.notifyBefore
+                    )
+
+                    events.append(finalEvent)
                 }
             } else {
                 let parts = line.split(separator: ":", maxSplits: 1)
@@ -343,13 +412,15 @@ class ImportCalendarViewModel: ObservableObject {
                         isCollectingDescription = false
                     }
                 } else if isCollectingDescription {
-                    // Handle multi-line description (continued on next line)
+                    // Handle multi-line description (continued on the next line)
                     currentDescription += " " + line.trimmingCharacters(in: .whitespaces)
                 }
             }
         }
         return events
     }
+
+    
 
     private func saveEventsToFirestore(events: [MoodleEvent]) {
         guard let userId = Auth.auth().currentUser?.uid else { return }

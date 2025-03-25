@@ -203,10 +203,11 @@ struct NotificationsView: View {
 }
 
 // Display Page - Choose dark, light, or system default mode
+import SwiftUI
+
 struct DisplayView: View {
     @AppStorage("colorScheme") private var colorScheme: String = "System"
-    @Environment(\.colorScheme) private var currentColorScheme
-
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -216,31 +217,33 @@ struct DisplayView: View {
                     Text("System Default").tag("System")
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                .onChange(of: colorScheme) { newValue in
-                    // Update the system appearance based on the selection
-                    if newValue == "Light" {
-                        UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
-                    } else if newValue == "Dark" {
-                        UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .dark
-                    } else {
-                        UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
-                    }
+                .onChange(of: colorScheme) { oldValue, newValue in
+                    updateAppearance(to: newValue)
                 }
             }
             .navigationTitle("Display")
         }
         .onAppear {
-            // Apply the saved appearance on launch
-            if colorScheme == "Light" {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
-            } else if colorScheme == "Dark" {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .dark
-            } else {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
+            updateAppearance(to: colorScheme)
+        }
+    }
+    
+    /// Updates the UI appearance based on the selected color scheme.
+    private func updateAppearance(to scheme: String) {
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = scene.windows.first {
+            switch scheme {
+            case "Light":
+                window.overrideUserInterfaceStyle = .light
+            case "Dark":
+                window.overrideUserInterfaceStyle = .dark
+            default:
+                window.overrideUserInterfaceStyle = .unspecified
             }
         }
     }
 }
+
 
 
 #Preview {

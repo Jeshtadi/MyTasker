@@ -49,6 +49,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     ) -> Bool {
         // Configure Firebase
         FirebaseApp.configure()
+
+        // Reset hideCheckmarkMessage every app launch
+        UserDefaults.standard.set(false, forKey: "hideCheckmarkMessage")
+
         return true
     }
 }
+
