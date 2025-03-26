@@ -54,3 +54,4 @@ struct ToDoListitem: Codable, Identifiable {
 //implement settings
 //update profile page
 //implemetn accessibility features
+// calender view the tasks date shouldnt be depended on the tilte month

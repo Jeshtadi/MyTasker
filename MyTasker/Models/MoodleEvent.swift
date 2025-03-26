@@ -58,11 +58,11 @@ struct MoodleEvent: Codable, Identifiable {
     private func cleanDescription(_ description: String) -> String {
         var cleanedDescription = description
         
-        // Replace ICS escape sequences
+        
         cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: "")
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert ICS \n to actual newlines
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Remove escaped commas
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Remove escaped semicolons
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")
         cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
         cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
         cleanedDescription = cleanedDescription.replacingOccurrences(of: "  +", with: " ", options: .regularExpression)
@@ -75,9 +75,9 @@ struct MoodleEvent: Codable, Identifiable {
         return cleanedDescription
     }
     
-    // Convert cleaned description to NSAttributedString
+    
     func attributedDescription() -> NSAttributedString {
-        let cleanedText = cleanDescription(description) // Clean the raw description first
+        let cleanedText = cleanDescription(description)
         let data = cleanedText.data(using: .utf8)!
         let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
             .documentType: NSAttributedString.DocumentType.plain,
@@ -85,6 +85,6 @@ struct MoodleEvent: Codable, Identifiable {
         ]
         
         let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil)
-        return attributedString ?? NSAttributedString(string: cleanedText) // Fallback to cleaned text
+        return attributedString ?? NSAttributedString(string: cleanedText)
     }
 }

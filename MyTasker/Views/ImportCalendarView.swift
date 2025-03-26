@@ -109,61 +109,211 @@
 
 
 //final working for moodle
-import SwiftUI
+//import SwiftUI
+////
+//struct ImportCalendarView: View {
+//    @StateObject private var viewModel = ImportCalendarViewModel()
 //
+//    var body: some View {
+//        VStack {
+//            TextField("Enter Moodle Calendar URL", text: $viewModel.moodleURL)
+//                .textFieldStyle(RoundedBorderTextFieldStyle())
+//                .padding()
+//
+//            Button(action: {
+//                viewModel.importCalendar()
+//            }) {
+//                Text("Import Calendar")
+//                    .font(.headline)
+//                    .padding()
+//                    .frame(maxWidth: .infinity)
+//                    .background(Color.blue)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(10)
+//            }
+//            .padding()
+//
+//            List(viewModel.events, id: \.id) { event in
+//                VStack(alignment: .leading) {
+//                    Text(event.title)
+//                        .font(.headline)
+//
+//                    // Convert NSAttributedString to a plain String with formatting preserved
+//                    Text(event.attributedDescription().string.isEmpty ? "No description available" : event.attributedDescription().string)
+//                        .font(.subheadline)
+//                        .foregroundColor(.gray)
+//                        .lineLimit(nil)
+//                        .fixedSize(horizontal: false, vertical: true)
+//                        .padding(.bottom, 8)
+//
+//                    Text("Start: \(Date(timeIntervalSince1970: event.startDate), formatter: dateFormatter)")
+//                        .font(.caption)
+//                    Text("End: \(Date(timeIntervalSince1970: event.endDate), formatter: dateFormatter)")
+//                        .font(.caption)
+//                }
+//            }
+//        }
+//        .padding()
+//    }
+//}
+//
+//// Date formatter for SwiftUI display
+//private let dateFormatter: DateFormatter = {
+//    let formatter = DateFormatter()
+//    formatter.dateStyle = .medium
+//    formatter.timeStyle = .short
+//    return formatter
+//}()
+
+
+
+
+import SwiftUI
+
 struct ImportCalendarView: View {
     @StateObject private var viewModel = ImportCalendarViewModel()
+    @State private var errorMessage: String?
+    @State private var showInstructions = false
+    @State private var showAlert = false
+    @State private var alertMessage: String = ""
+    @State private var refreshView = false
+    @State private var navigateToCalendar = false // Track navigation state
+    @State private var showNavigationPrompt = false // Prompt user after import
 
     var body: some View {
-        VStack {
-            TextField("Enter Moodle Calendar URL", text: $viewModel.moodleURL)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+        NavigationView {
+            ZStack {
+                ColorPalette.primaryBackground
+                    .edgesIgnoringSafeArea(.all)
 
-            Button(action: {
-                viewModel.importCalendar()
-            }) {
-                Text("Import Calendar")
-                    .font(.headline)
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Import Your Moodle Calendar")
+                        .font(.title2)
+                        .padding(.bottom)
+                        .fontWeight(.bold)
+                        .foregroundColor(ColorPalette.textPrimary)
+
+                    Text("Enter your Moodle Calendar URL below to sync with MyTasker.")
+                        .foregroundColor(ColorPalette.textPrimary)
+
+                    TextField("Enter Moodle Calendar URL", text: $viewModel.moodleURL)
+                        .padding()
+                        .background(ColorPalette.cardBackground)
+                        .cornerRadius(8)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(ColorPalette.borderColor, lineWidth: 1))
+
+                    if let error = errorMessage {
+                        Text(error)
+                            .foregroundColor(ColorPalette.errorColor)
+                    }
+
+                    Button(action: {
+                        if viewModel.moodleURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            alertMessage = "Please enter a valid Moodle Calendar URL."
+                            showAlert = true
+                        } else {
+                            viewModel.importCalendar { error in
+                                if let error = error {
+                                    alertMessage = error
+                                    showAlert = true
+                                } else {
+                                    alertMessage = "Calendar successfully added to your app!"
+                                    showNavigationPrompt = true // Show prompt after success
+
+                                    // ✅ Load events immediately, regardless of user choice
+                                    DispatchQueue.main.async {
+                                        viewModel.loadEventsFromFirestore()
+                                    }
+                                }
+                                showAlert = true
+                                refreshView.toggle() // Force UI refresh
+                            }
+                        }
+                    }) {
+                        Text("Import Calendar")
+                            .fontWeight(.bold)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(ColorPalette.buttonBackground)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .onChange(of: refreshView) { _ in
+                        viewModel.loadEventsFromFirestore()
+                    }
+
+                    Button("How to Find Your Moodle Calendar URL?") {
+                        showInstructions.toggle()
+                    }
                     .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding()
+                    .foregroundColor(ColorPalette.accentColor)
+                    .sheet(isPresented: $showInstructions) {
+                        MoodleInstructionsView()
+                    }
 
-            List(viewModel.events, id: \.id) { event in
-                VStack(alignment: .leading) {
-                    Text(event.title)
-                        .font(.headline)
-
-                    // Convert NSAttributedString to a plain String with formatting preserved
-                    Text(event.attributedDescription().string.isEmpty ? "No description available" : event.attributedDescription().string)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.bottom, 8)
-
-                    Text("Start: \(Date(timeIntervalSince1970: event.startDate), formatter: dateFormatter)")
-                        .font(.caption)
-                    Text("End: \(Date(timeIntervalSince1970: event.endDate), formatter: dateFormatter)")
-                        .font(.caption)
+                    // Navigation link to CalendarView (hidden but activated when navigateToCalendar is true)
+                    NavigationLink(destination: CalendarView(), isActive: $navigateToCalendar) {
+                        EmptyView()
+                    }
                 }
+                .padding()
             }
+            .alert(isPresented: $showAlert) {
+                return Alert(
+                    title: Text("Calendar Imported"),
+                    message: Text("Your Moodle events have been successfully added."),
+                    dismissButton: .default(Text("Confirm")) {
+                        navigateToCalendar = true
+                    }
+                )
+            }
+
         }
-        .padding()
     }
 }
 
-// Date formatter for SwiftUI display
-private let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .short
-    return formatter
-}()
+
+struct MoodleInstructionsView: View {
+    @Environment(\.presentationMode) var presentationMode
+
+    var body: some View {
+        ZStack {
+            ColorPalette.primaryBackground // Ensures full-screen background color
+                .edgesIgnoringSafeArea(.all)
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("How to Find Your Moodle Calendar URL?")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(ColorPalette.textPrimary)
+
+                Text("1. Open Moodle and go to your calendar.")
+                    .foregroundColor(ColorPalette.textPrimary)
+                Text("2. Click on ‘Export calendar’.")
+                    .foregroundColor(ColorPalette.textPrimary)
+                Text("3. Select ‘All events’ or ‘Custom range’.")
+                    .foregroundColor(ColorPalette.textPrimary)
+                Text("4. Copy the provided URL and paste it here.")
+                    .foregroundColor(ColorPalette.textPrimary)
+
+                Button("Close") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .padding()
+                .background(ColorPalette.buttonBackground)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+            }
+            .padding()
+            .background(ColorPalette.secondaryBackground)
+            .cornerRadius(12)
+            .shadow(color: ColorPalette.shadowColor, radius: 4, x: 0, y: 2)
+            .padding()
+        }
+    }
+}
+
+
 
 
 

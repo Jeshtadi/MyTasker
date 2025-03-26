@@ -105,6 +105,7 @@ import FirebaseFirestore
 
 class ProfileVM: ObservableObject {
     @Published var user: User?
+    @Published var profileImageURL: URL?
 
     private let db = Firestore.firestore()
     
@@ -146,50 +147,21 @@ class ProfileVM: ObservableObject {
             }
         }
     }
-
-//    func updateEmail(newEmail: String) {
-//        guard let currentUser = Auth.auth().currentUser else { return }
-//        
-//        currentUser.updateEmail(to: newEmail) { error in
-//            if let error = error {
-//                print("Error updating email: \(error.localizedDescription)")
-//            } else {
-//                self.db.collection("users").document(currentUser.uid).updateData([
-//                    "email": newEmail
-//                ]) { error in
-//                    if let error = error {
-//                        print("Error updating email in Firestore: \(error.localizedDescription)")
-//                    } else {
-//                        DispatchQueue.main.async {
-//                            self.user?.email = newEmail
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
     func updateEmail(newEmail: String) {
         guard let currentUser = Auth.auth().currentUser else { return }
-        
+       
         currentUser.sendEmailVerification(beforeUpdatingEmail: newEmail) { error in
             if let error = error {
                 print("Error sending email verification: \(error.localizedDescription)")
             } else {
-                currentUser.updateEmail(to: newEmail) { error in
+                self.db.collection("users").document(currentUser.uid).updateData([
+                    "email": newEmail
+                ]) { error in
                     if let error = error {
-                        print("Error updating email: \(error.localizedDescription)")
+                        print("Error updating email in Firestore: \(error.localizedDescription)")
                     } else {
-                        self.db.collection("users").document(currentUser.uid).updateData([
-                            "email": newEmail
-                        ]) { error in
-                            if let error = error {
-                                print("Error updating email in Firestore: \(error.localizedDescription)")
-                            } else {
-                                DispatchQueue.main.async {
-                                    self.user?.email = newEmail
-                                }
-                            }
+                        DispatchQueue.main.async {
+                            self.user?.email = newEmail
                         }
                     }
                 }
@@ -205,7 +177,7 @@ class ProfileVM: ObservableObject {
 
         let credential = EmailAuthProvider.credential(withEmail: email, password: currentPassword)
 
-        // Re-authenticate the user
+
         currentUser.reauthenticate(with: credential) { authResult, error in
             if let error = error {
                 completion("Re-authentication failed: \(error.localizedDescription)")

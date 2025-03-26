@@ -335,16 +335,16 @@ struct ContentView: View {
                     }
                     .tag(3)
                 
-                SettingsView()
-                    .tabItem {
-                        Label("Settings", systemImage: "gearshape")
-                    }
-                    .tag(4)
+//                SettingsView()
+//                    .tabItem {
+//                        Label("Settings", systemImage: "gearshape")
+//                    }
+//                    .tag(4)
                 ImportCalendarView()
                     .tabItem {
                         Label("Import", systemImage: "arrow.down.doc")
                     }
-                    .tag(5)
+                    .tag(4)
             }
 //            .navigationTitle("MyTasker")
             .navigationBarTitleDisplayMode(.inline)

@@ -1,93 +1,5 @@
-//
-//  Profile.swift
-//  MyTasker
-//
-//  Created by Anushya Jeshtadi on 22/01/2025.
-//
-//working profile
-//import SwiftUI
-//
-//struct Profile: View {
-//    @StateObject var viewModel = ProfileVM()
-//    
-//    var body: some View {
-//        NavigationView {
-//            VStack(spacing: 20) {
-//                if let user = viewModel.user {
-//                    profile(user: user)
-//                } else {
-//                    ProgressView("Loading Profile...")
-//                        .progressViewStyle(CircularProgressViewStyle(tint: ColorPalette.accentColor))
-//                }
-//            }
-//            .padding()
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            .background(ColorPalette.primaryBackground.ignoresSafeArea())
-//            .navigationTitle("Profile")
-//        }
-//        .onAppear {
-//            viewModel.fetchUser()
-//        }
-//    }
-//    
-//    @ViewBuilder
-//    func profile(user: User) -> some View {
-//        VStack(spacing: 20) {
-//            Image(systemName: "person.circle.fill")
-//                .resizable()
-//                .aspectRatio(contentMode: .fit)
-//                .frame(width: 130, height: 130)
-//                .foregroundColor(ColorPalette.accentColor)
-//                .shadow(radius: 5)
-//                
-//            VStack(alignment: .leading, spacing: 15) {
-//                infoRow(title: "Name", value: user.name)
-//                infoRow(title: "Email", value: user.email)
-//                infoRow(title: "Member Since", value: Date(timeIntervalSince1970: user.joined).formatted(date: .abbreviated, time: .omitted))
-//            }
-//            .padding()
-//            .frame(maxWidth: .infinity)
-//            .background(ColorPalette.secondaryBackground)
-//            .cornerRadius(15)
-//            .shadow(radius: 5)
-//            
-//            Button(action: {
-//                viewModel.logOut()
-//            }) {
-//                Text("Log Out")
-//                    .frame(maxWidth: .infinity)
-//                    .padding()
-//                    .foregroundColor(.white)
-//                    .background(ColorPalette.buttonBackground)
-//                    .cornerRadius(10)
-//                    .shadow(radius: 3)
-//            }
-//        }
-//        .padding()
-//    }
-//    
-//    func infoRow(title: String, value: String) -> some View {
-//        HStack {
-//            Text("\(title):")
-//                .font(.headline)
-//                .foregroundColor(ColorPalette.textPrimary)
-//            
-//            Spacer()
-//            
-//            Text(value)
-//                .foregroundColor(ColorPalette.textPrimary)
-//        }
-//    }
-//}
-//
-//#Preview {
-//    Profile()
-//}
 
-
-
-
-
+//WORKING AND FINAL
 import SwiftUI
 import PhotosUI
 import FirebaseFirestore
@@ -97,10 +9,8 @@ import FirebaseAuth
 struct Profile: View {
     @StateObject var viewModel = ProfileVM()
     @FirestoreQuery var items: [ToDoListitem]
-    @State private var selectedImage: UIImage? // Store user-selected image
+    @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
-    
-    
     
     var completedTasksCount: Int {
         items.filter { $0.isDone }.count
@@ -109,23 +19,24 @@ struct Profile: View {
         items.filter { !$0.isDone }.count
     }
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                if let user = viewModel.user {
-                    profile(user: user)
-                } else {
-                    ProgressView("Loading Profile...")
-                        .progressViewStyle(CircularProgressViewStyle(tint: ColorPalette.accentColor))
-                }
+        VStack(spacing: 20) {
+            if let user = viewModel.user {
+                profile(user: user)
+            } else {
+                ProgressView("Loading Profile...")
+                    .progressViewStyle(CircularProgressViewStyle(tint: ColorPalette.accentColor))
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(ColorPalette.primaryBackground.ignoresSafeArea())
-            .navigationTitle("Profile")
         }
-        .onAppear {
-            viewModel.fetchUser()
+        .navigationTitle("")
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Profile")
+                    .font(.title) // Increase the size as needed (e.g., .largeTitle)
+                    .fontWeight(.bold) // Optional: Makes it stand out more
+                    .foregroundColor(ColorPalette.textPrimary) // Optional: Adjust color if needed
+            }
         }
+
     }
     
     @ViewBuilder
@@ -180,42 +91,72 @@ struct Profile: View {
             .shadow(radius: 5)
 
             // Task Summary
-            HStack {
-                taskSummary(title: "Completed Tasks", count:
-                                completedTasksCount, color: .green)
-                Spacer()
-                taskSummary(title: "Pending Tasks", count:
-                                remainingTasksCount, color: .red)
+//            HStack(spacing: 20) {
+//                
+//                taskSummary(title: "Completed", count: completedTasksCount, color: .green)
+//                    .frame(maxWidth: .infinity, minHeight: 90)
+//                    
+//                taskSummary(title: "Pending", count: remainingTasksCount, color: .red)
+//                    .frame(maxWidth: .infinity, minHeight: 90)
+//            }
+//
+//            .padding(.horizontal)
+//            .frame(maxWidth: .infinity)
+            
+            VStack(alignment: .center, spacing: 10) {
+                // Title for the task summary section
+                Text("Task Summary")
+                    .font(.headline) // Adjust font size as needed
+//                    .foregroundColor(ColorPalette.textPrimary)
+                
+                // Task summary HStack
+                HStack {
+                    taskSummary(title: "Completed", count: completedTasksCount, color: .green)
+                        .frame(maxWidth: .infinity)
+                        .padding(.trailing, 10)
+                    
+                    taskSummary(title: "Pending", count: remainingTasksCount, color: .red)
+                        .frame(maxWidth: .infinity)
+                        .padding(.leading, 10)
+                }
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: 150)
+                .cornerRadius(15)
+                .shadow(radius: 5)
             }
-            .padding(.horizontal)
+            .padding()
+
 
             // Settings & Logout
             VStack {
-                NavigationLink(destination: SettingsView()){
-                    
+                NavigationLink(destination: SettingsView()) {
                     HStack {
+                       
                         Image(systemName: "gear")
+                            .font(.title2)
+                            .foregroundColor(ColorPalette.textPrimary)
                         Text("Settings")
+                            .font(.title2)
+                            .foregroundColor(ColorPalette.textPrimary)
                     }
-                    .frame(maxWidth: .infinity)
                     .padding()
-                    .foregroundColor(.white)
-                    .background(Color.blue)
+                    .frame(maxWidth: .infinity)
+                    .background(ColorPalette.secondaryBackground)
                     .cornerRadius(10)
                     .shadow(radius: 3)
                 }
 
-                Button(action: {
-                    viewModel.logOut()
-                }) {
-                    Text("Log Out")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(ColorPalette.buttonBackground)
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
-                }
+//                Button(action: {
+//                    viewModel.logOut()
+//                }) {
+//                    Text("Log Out")
+//                        .frame(maxWidth: .infinity)
+//                        .padding()
+//                        .foregroundColor(.white)
+//                        .background(ColorPalette.buttonBackground)
+//                        .cornerRadius(10)
+//                        .shadow(radius: 3)
+//                }
             }
         }
         .padding()
@@ -243,10 +184,10 @@ struct Profile: View {
             Text(title)
                 .foregroundColor(ColorPalette.textPrimary)
         }
-        .frame(width: 120, height: 80)
+        .frame(width: 130, height: 130)
         .background(ColorPalette.secondaryBackground)
         .cornerRadius(10)
-        .shadow(radius: 3)
+//        .shadow(radius: 3)
     }
 }
 
