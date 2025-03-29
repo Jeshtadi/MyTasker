@@ -263,7 +263,7 @@ struct ContentView: View {
     @StateObject var viewModel = ContentViewVM()
     @State private var selectedTab = 0 // Track selected tab
     @State private var isAddingTask = false // Controls the bottom sheet
-
+    
     var body: some View {
         if viewModel.isSignedIn && !viewModel.currentUserId.isEmpty {
             accountView
@@ -271,7 +271,7 @@ struct ContentView: View {
             loginView
         }
     }
-
+    
     // View before login
     var loginView: some View {
         NavigationView {
@@ -305,7 +305,7 @@ struct ContentView: View {
             .padding()
         }
     }
-
+    
     // View after login
     @ViewBuilder
     var accountView: some View {
@@ -329,26 +329,26 @@ struct ContentView: View {
                     }
                     .tag(2)
                 
-                GeminiChatView()
-                    .tabItem {
-                        Label("AI Chat", systemImage: "bubble.left.and.bubble.right")
-                    }
-                    .tag(3)
-                
-//                SettingsView()
+//                GeminiChatView()
 //                    .tabItem {
-//                        Label("Settings", systemImage: "gearshape")
+//                        Label("AI Chat", systemImage: "bubble.left.and.bubble.right")
 //                    }
-//                    .tag(4)
+//                    .tag(3)
+                
                 ImportCalendarView()
                     .tabItem {
                         Label("Import", systemImage: "arrow.down.doc")
                     }
                     .tag(4)
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .tag(5)
             }
-//            .navigationTitle("MyTasker")
+            .toolbarBackground(Color.white, for: .navigationBar) // Set navigation bar background color
             .navigationBarTitleDisplayMode(.inline)
-            .onChange(of: selectedTab) {oldTab, newTab in
+            .onChange(of: selectedTab) { oldTab, newTab in
                 if newTab == 1 {
                     isAddingTask = true
                     selectedTab = 0
@@ -360,6 +360,58 @@ struct ContentView: View {
         }
     }
 }
+//    var accountView: some View {
+//        NavigationView {
+//            TabView(selection: $selectedTab) {
+//                AfterLoginView(userId: viewModel.currentUserId)
+//                    .tabItem {
+//                        Label("Home", systemImage: "house")
+//                    }
+//                    .tag(0)
+//                
+//                Color.clear // Placeholder view (not visible)
+//                    .tabItem {
+//                        Label("Add", systemImage: "plus")
+//                    }
+//                    .tag(1)
+//                
+//                CalendarView()
+//                    .tabItem {
+//                        Label("Calendar", systemImage: "calendar")
+//                    }
+//                    .tag(2)
+//                
+//                GeminiChatView()
+//                    .tabItem {
+//                        Label("AI Chat", systemImage: "bubble.left.and.bubble.right")
+//                    }
+//                    .tag(3)
+//                
+////                SettingsView()
+////                    .tabItem {
+////                        Label("Settings", systemImage: "gearshape")
+////                    }
+////                    .tag(4)
+//                ImportCalendarView()
+//                    .tabItem {
+//                        Label("Import", systemImage: "arrow.down.doc")
+//                    }
+//                    .tag(4)
+//            }
+////            .navigationTitle("MyTasker")
+//            .navigationBarTitleDisplayMode(.inline)
+//            .onChange(of: selectedTab) {oldTab, newTab in
+//                if newTab == 1 {
+//                    isAddingTask = true
+//                    selectedTab = 0
+//                }
+//            }
+//            .sheet(isPresented: $isAddingTask) {
+//                CreateNewItem(newItemPresented: $isAddingTask)
+//            }
+//        }
+//    }
+//}
 
 // Preview
 #Preview {

@@ -42,6 +42,21 @@ struct MyTaskerApp: App {
     }
 }
 
+//class AppDelegate: NSObject, UIApplicationDelegate {
+//    func application(
+//        _ application: UIApplication,
+//        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+//    ) -> Bool {
+//        // Configure Firebase
+//        FirebaseApp.configure()
+//
+//        // Reset hideCheckmarkMessage every app launch
+//        UserDefaults.standard.set(false, forKey: "hideCheckmarkMessage")
+//
+//        return true
+//    }
+//}
+
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
@@ -50,10 +65,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         // Configure Firebase
         FirebaseApp.configure()
 
+        // Request notification permission
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            if granted {
+                print("Notification permission granted.")
+            } else {
+                print("Notification permission denied.")
+            }
+        }
+
         // Reset hideCheckmarkMessage every app launch
         UserDefaults.standard.set(false, forKey: "hideCheckmarkMessage")
 
         return true
     }
 }
+
 

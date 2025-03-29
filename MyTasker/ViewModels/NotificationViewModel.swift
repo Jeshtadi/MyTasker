@@ -9,7 +9,7 @@ import Foundation
 
 class NotificationViewModel: ObservableObject {
     init() {
-        NotificationManager.shared.requestPermission() // Ask for notification permissions at app launch
+        NotificationManager.shared.requestPermission() 
     }
 
     /// Schedule a notification when a new task is added

@@ -516,69 +516,170 @@ struct ToDoListitems: View {
 //        .padding()
 //    }
 //}
+//
+//using and working
+//struct EditTaskView: View {
+//    @Environment(\.presentationMode) var presentationMode
+//    @ObservedObject var viewModel: ToDoListItemsVM
+//    @State var item: ToDoListitem
+//
+//    var body: some View {
+//        VStack {
+//            Text("Edit Task")
+//                .font(.title)
+//                .fontWeight(.bold)
+//                .padding()
+//                .foregroundColor(ColorPalette.textPrimary) // Title text color
+//
+//            TextField("Task Name", text: $item.title)
+//                .textFieldStyle(RoundedBorderTextFieldStyle())
+//                .padding()
+//                .background(ColorPalette.secondaryBackground) // TextField background color
+//                .cornerRadius(8)
+//                .foregroundColor(ColorPalette.textPrimary) // Text color
+//                .padding([.top, .horizontal])
+//
+//            DatePicker("Due Date", selection: Binding(
+//                get: { Date(timeIntervalSince1970: item.dueDate) },
+//                set: { item.dueDate = $0.timeIntervalSince1970 }
+//            ), displayedComponents: .date)
+//                .padding()
+//                .background(ColorPalette.secondaryBackground) // DatePicker background color
+//                .cornerRadius(8)
+//                .foregroundColor(ColorPalette.textPrimary) // Text color
+//                .padding([.top, .horizontal])
+//
+//            Spacer()
+//
+//            Button("Save Changes") {
+//                viewModel.updateTask(item: item)
+//                presentationMode.wrappedValue.dismiss()
+//            }
+//            .padding()
+//            .frame(maxWidth: .infinity)
+//            .background(ColorPalette.buttonBackground) // Button background color
+//            .foregroundColor(.white) // Button text color
+//            .cornerRadius(10)
+//            .padding()
+//
+//            Button("Cancel") {
+//                presentationMode.wrappedValue.dismiss()
+//            }
+//            .padding()
+//            .frame(maxWidth: .infinity)
+//            .background(ColorPalette.disabledColor) // Cancel button background color
+//            .foregroundColor(.white) // Cancel button text color
+//            .cornerRadius(10)
+//            .padding([.bottom, .horizontal])
+//        }
+//        .padding()
+//        .background(ColorPalette.primaryBackground) // Background color for the whole view
+//        .cornerRadius(12)
+//        .shadow(color: ColorPalette.shadowColor, radius: 10, x: 0, y: 10) // Shadow effect
+//        .padding()
+//    }
+//}
 
 
 struct EditTaskView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: ToDoListItemsVM
     @State var item: ToDoListitem
-
+    
     var body: some View {
         VStack {
             Text("Edit Task")
                 .font(.title)
                 .fontWeight(.bold)
                 .padding()
-                .foregroundColor(ColorPalette.textPrimary) // Title text color
+                .foregroundColor(ColorPalette.textPrimary)
 
+            // Task Title
             TextField("Task Name", text: $item.title)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-                .background(ColorPalette.secondaryBackground) // TextField background color
+                .background(ColorPalette.secondaryBackground)
                 .cornerRadius(8)
-                .foregroundColor(ColorPalette.textPrimary) // Text color
-                .padding([.top, .horizontal])
+                .foregroundColor(ColorPalette.textPrimary)
 
+            // Task Description
+            TextField("Task Description", text: Binding(
+                get: { item.description ?? "" },
+                set: { item.description = $0 }
+            ))
+            .frame(height: 100)
+            .padding()
+            .background(ColorPalette.secondaryBackground)
+            .cornerRadius(8)
+            .foregroundColor(ColorPalette.textPrimary)
+
+
+            // Due Date Picker
             DatePicker("Due Date", selection: Binding(
                 get: { Date(timeIntervalSince1970: item.dueDate) },
                 set: { item.dueDate = $0.timeIntervalSince1970 }
-            ), displayedComponents: .date)
+            ), displayedComponents: [.date, .hourAndMinute])
                 .padding()
-                .background(ColorPalette.secondaryBackground) // DatePicker background color
+                .background(ColorPalette.secondaryBackground)
                 .cornerRadius(8)
-                .foregroundColor(ColorPalette.textPrimary) // Text color
-                .padding([.top, .horizontal])
+                .foregroundColor(ColorPalette.textPrimary)
+
+            // Notification Toggle
+//            Toggle("Enable Notification", isOn: $item.notificationsEnabled)
+//                .padding()
+//                .background(ColorPalette.secondaryBackground)
+//                .cornerRadius(8)
+//                .foregroundColor(ColorPalette.textPrimary)
+
+            // Task Color Picker
+            ColorPicker("Task Color", selection: $item.color)
+                .padding()
+                .background(ColorPalette.secondaryBackground)
+                .cornerRadius(8)
+
+            // Repeat Interval Picker
+            Picker("Repeat", selection: $item.repeatInterval) {
+                Text("None").tag(0)
+                Text("Daily").tag(1)
+                Text("Weekly").tag(2)
+                Text("Monthly").tag(3)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+            .background(ColorPalette.secondaryBackground)
+            .cornerRadius(8)
 
             Spacer()
 
+            // Save Button
             Button("Save Changes") {
                 viewModel.updateTask(item: item)
                 presentationMode.wrappedValue.dismiss()
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(ColorPalette.buttonBackground) // Button background color
-            .foregroundColor(.white) // Button text color
+            .background(ColorPalette.buttonBackground)
+            .foregroundColor(.white)
             .cornerRadius(10)
-            .padding()
 
+            // Cancel Button
             Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(ColorPalette.disabledColor) // Cancel button background color
-            .foregroundColor(.white) // Cancel button text color
+            .background(ColorPalette.disabledColor)
+            .foregroundColor(.white)
             .cornerRadius(10)
-            .padding([.bottom, .horizontal])
         }
         .padding()
-        .background(ColorPalette.primaryBackground) // Background color for the whole view
+        .background(ColorPalette.primaryBackground)
         .cornerRadius(12)
-        .shadow(color: ColorPalette.shadowColor, radius: 10, x: 0, y: 10) // Shadow effect
+        .shadow(color: ColorPalette.shadowColor, radius: 10, x: 0, y: 10)
         .padding()
     }
 }
+
 
 
 extension ToDoListItemsVM {

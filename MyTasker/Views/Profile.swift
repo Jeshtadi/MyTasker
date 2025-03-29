@@ -31,9 +31,9 @@ struct Profile: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Profile")
-                    .font(.title) // Increase the size as needed (e.g., .largeTitle)
-                    .fontWeight(.bold) // Optional: Makes it stand out more
-                    .foregroundColor(ColorPalette.textPrimary) // Optional: Adjust color if needed
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(ColorPalette.textPrimary) 
             }
         }
 
@@ -128,36 +128,36 @@ struct Profile: View {
 
 
             // Settings & Logout
-            VStack {
-                NavigationLink(destination: SettingsView()) {
-                    HStack {
-                       
-                        Image(systemName: "gear")
-                            .font(.title2)
-                            .foregroundColor(ColorPalette.textPrimary)
-                        Text("Settings")
-                            .font(.title2)
-                            .foregroundColor(ColorPalette.textPrimary)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(ColorPalette.secondaryBackground)
-                    .cornerRadius(10)
-                    .shadow(radius: 3)
-                }
-
-//                Button(action: {
-//                    viewModel.logOut()
-//                }) {
-//                    Text("Log Out")
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
-//                        .foregroundColor(.white)
-//                        .background(ColorPalette.buttonBackground)
-//                        .cornerRadius(10)
-//                        .shadow(radius: 3)
+//            VStack {
+//                NavigationLink(destination: SettingsView()) {
+//                    HStack {
+//                       
+//                        Image(systemName: "gear")
+//                            .font(.title2)
+//                            .foregroundColor(ColorPalette.textPrimary)
+//                        Text("Settings")
+//                            .font(.title2)
+//                            .foregroundColor(ColorPalette.textPrimary)
+//                    }
+//                    .padding()
+//                    .frame(maxWidth: .infinity)
+//                    .background(ColorPalette.secondaryBackground)
+//                    .cornerRadius(10)
+//                    .shadow(radius: 3)
 //                }
-            }
+//
+////                Button(action: {
+////                    viewModel.logOut()
+////                }) {
+////                    Text("Log Out")
+////                        .frame(maxWidth: .infinity)
+////                        .padding()
+////                        .foregroundColor(.white)
+////                        .background(ColorPalette.buttonBackground)
+////                        .cornerRadius(10)
+////                        .shadow(radius: 3)
+////                }
+//            }
         }
         .padding()
     }

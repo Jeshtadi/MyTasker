@@ -476,18 +476,73 @@ struct AccountView: View {
     }
 }
 
+//struct NotificationsView: View {
+//    @State private var notificationsEnabled = true
+//
+//    var body: some View {
+//        NavigationStack {
+//            Form {
+//                Toggle("Enable Notifications", isOn: $notificationsEnabled)
+//            }
+//            .navigationTitle("Notifications")
+//        }
+//    }
+//}
+
+import SwiftUI
+import UserNotifications
+
 struct NotificationsView: View {
-    @State private var notificationsEnabled = true
+    @State private var notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled") {
+        didSet {
+            UserDefaults.standard.set(notificationsEnabled, forKey: "notificationsEnabled")
+        }
+    }
 
     var body: some View {
         NavigationStack {
             Form {
                 Toggle("Enable Notifications", isOn: $notificationsEnabled)
+                    .onChange(of: notificationsEnabled) { newValue in
+                        if newValue {
+                            // Handle enabling notifications
+                            requestNotificationPermission()
+                        } else {
+                            // Handle disabling notifications
+                            removeScheduledNotifications()
+                        }
+                    }
             }
             .navigationTitle("Notifications")
         }
     }
+
+    func requestNotificationPermission() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            if granted {
+                print("Notification permission granted.")
+                // Update the setting to reflect that notifications are enabled
+                DispatchQueue.main.async {
+                    notificationsEnabled = true
+                }
+            } else {
+                print("Notification permission denied.")
+                // Update the setting to reflect that notifications are denied
+                DispatchQueue.main.async {
+                    notificationsEnabled = false
+                }
+            }
+        }
+    }
+
+    func removeScheduledNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests() // This will remove all pending notifications
+        print("All scheduled notifications have been removed.")
+    }
 }
+
 
 
 struct DisplayView: View {
