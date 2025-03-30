@@ -8,9 +8,9 @@
 import Foundation
 
 class NotificationViewModel: ObservableObject {
-    init() {
-        NotificationManager.shared.requestPermission() 
-    }
+//    init() {
+//        NotificationManager.shared.requestPermission() 
+//    }
 
     /// Schedule a notification when a new task is added
     func addTaskNotification(task: ToDoListitem) {

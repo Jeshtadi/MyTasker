@@ -4,7 +4,7 @@
 //
 //  Created by Anushya Jeshtadi on 22/01/2025.
 //
-//
+//current useing it
 import SwiftUI
 
 struct CreateNewItem: View {
@@ -28,23 +28,23 @@ struct CreateNewItem: View {
                         .foregroundColor(ColorPalette.textPrimary)
                 }
 
-                Section {
-                    HStack {
-                        TextField("Enter duration", value: $viewModel.duration, format: .number)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(DefaultTextFieldStyle())
-                            .foregroundColor(ColorPalette.textPrimary)
-                        
-                        Picker("Unit", selection: $viewModel.isMinutesSelected) {
-                            Text("Minutes").tag(true)
-                            Text("Hours").tag(false)
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                    }
-                } header: {
-                    Text("Duration")
-                        .foregroundColor(ColorPalette.textPrimary)
-                }
+//                Section {
+//                    HStack {
+//                        TextField("Enter duration", value: $viewModel.duration, format: .number)
+//                            .keyboardType(.numberPad)
+//                            .textFieldStyle(DefaultTextFieldStyle())
+//                            .foregroundColor(ColorPalette.textPrimary)
+//                        
+//                        Picker("Unit", selection: $viewModel.isMinutesSelected) {
+//                            Text("Minutes").tag(true)
+//                            Text("Hours").tag(false)
+//                        }
+//                        .pickerStyle(MenuPickerStyle())
+//                    }
+//                } header: {
+//                    Text("Duration")
+//                        .foregroundColor(ColorPalette.textPrimary)
+//                }
         
 
 
@@ -127,3 +127,4 @@ struct CreateNewItem: View {
     }, set: { _ in
     }))
 }
+

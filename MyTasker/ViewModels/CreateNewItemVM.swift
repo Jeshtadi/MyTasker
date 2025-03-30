@@ -261,6 +261,7 @@ class CreateNewItemVM: ObservableObject {
     @Published var duration: TimeInterval = 0
     @Published var isMinutesSelected: Bool = true
     @Published var selectedColor: String = "Default"
+//    @Published var selectedColor: String = "#FFFFFF"
     @Published var repeatInterval: TimeInterval? = nil
     @Published var notifyBefore: TimeInterval? = nil
     @Published var showAlert = false
@@ -268,14 +269,14 @@ class CreateNewItemVM: ObservableObject {
     @Published var tasks: [ToDoListitem] = []
     
     private let db = Firestore.firestore()
-
+    
     init() {
         fetchTasks()
     }
-
+    
     func fetchTasks() {
         guard let uId = Auth.auth().currentUser?.uid else { return }
-
+        
         db.collection("users")
             .document(uId)
             .collection("todos")
@@ -284,10 +285,10 @@ class CreateNewItemVM: ObservableObject {
                     print("Failed to fetch tasks: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
-
+                
                 self?.tasks = documents.compactMap { doc in
                     let data = doc.data()
-
+                    
                     return ToDoListitem(
                         id: data["id"] as? String ?? UUID().uuidString,
                         title: data["title"] as? String ?? "",
@@ -303,11 +304,11 @@ class CreateNewItemVM: ObservableObject {
                 }
             }
     }
-
+    
     func save() {
         guard canSave else { return }
         guard let uId = Auth.auth().currentUser?.uid else { return }
-
+        
         let newId = UUID().uuidString
         let newItem = ToDoListitem(
             id: newId,
@@ -321,7 +322,7 @@ class CreateNewItemVM: ObservableObject {
             repeatInterval: repeatInterval,
             notifyBefore: notifyBefore
         )
-
+        
         db.collection("users")
             .document(uId)
             .collection("todos")
@@ -333,7 +334,6 @@ class CreateNewItemVM: ObservableObject {
                         self?.resetFields()
                         self?.showSuccessAlert = true
                         
-                        // Schedule Notification
                         NotificationManager.shared.scheduleNotification(for: newItem)
                     }
                 } else {
@@ -341,23 +341,23 @@ class CreateNewItemVM: ObservableObject {
                 }
             }
     }
-
+    
     var canSave: Bool {
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
         guard dueDate >= Date().addingTimeInterval(-86400) else { return false }
         return true
     }
-
-    func getTaskColor() -> Color {
-        switch selectedColor {
-        case "Red": return .red
-        case "Blue": return .blue
-        case "Green": return .green
-        case "Yellow": return .yellow
-        default: return .gray // Default color if no match
-        }
-    }
-
+    
+//        func getTaskColor() -> Color {
+//            switch selectedColor {
+//            case "Red": return .red
+//            case "Blue": return .blue
+//            case "Green": return .green
+//            case "Yellow": return .yellow
+//            default: return .gray // Default color if no match
+//            }
+//        }import SwiftUI
+    
     private func resetFields() {
         title = ""
         description = ""
@@ -368,3 +368,4 @@ class CreateNewItemVM: ObservableObject {
         notifyBefore = nil
     }
 }
+

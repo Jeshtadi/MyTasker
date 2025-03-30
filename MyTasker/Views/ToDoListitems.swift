@@ -381,7 +381,10 @@
 
 
 import SwiftUI
+import FirebaseFirestore
 
+
+//uising todolist
 struct ToDoListitems: View {
     @ObservedObject var viewModel: ToDoListItemsVM
     let item: ToDoListitem
@@ -408,19 +411,20 @@ struct ToDoListitems: View {
             // Additional Task Info
             VStack(alignment: .leading, spacing: 5) {
                 Text("Due: \(Date(timeIntervalSince1970: item.dueDate).formatted(date: .abbreviated, time: .shortened))")
+                    .font(.system(size: 16))
                 
                 Text("Created: \(Date(timeIntervalSince1970: item.createDate).formatted(date: .abbreviated, time: .shortened))")
                 
-                if let durationInSeconds = item.duration {
-                    let hours = Int(durationInSeconds) / 60
-                    let minutes = (Int(durationInSeconds) % 60)
-                    
-                    if hours > 0 {
-                        Text("Duration: \(hours) hour\(hours > 1 ? "s" : "") \(minutes > 0 ? "\(Int(minutes)) minute\(minutes > 1 ? "s" : "")" : "")")
-                    } else {
-                        Text("Duration: \(Int(minutes)) minute\(minutes > 1 ? "s" : "")")
-                    }
-                }
+//                if let durationInSeconds = item.duration {
+//                    let hours = Int(durationInSeconds) / 60
+//                    let minutes = (Int(durationInSeconds) % 60)
+//                    
+//                    if hours > 0 {
+//                        Text("Duration: \(hours) hour\(hours > 1 ? "s" : "") \(minutes > 0 ? "\(Int(minutes)) minute\(minutes > 1 ? "s" : "")" : "")")
+//                    } else {
+//                        Text("Duration: \(Int(minutes)) minute\(minutes > 1 ? "s" : "")")
+//                    }
+//                }
             }
             .font(.footnote)
             .foregroundColor(.black.opacity(0.9))
@@ -480,6 +484,7 @@ struct ToDoListitems: View {
 }
 
 
+//CURRENT
 //struct EditTaskView: View {
 //    @Environment(\.presentationMode) var presentationMode
 //    @ObservedObject var viewModel: ToDoListItemsVM
@@ -491,91 +496,105 @@ struct ToDoListitems: View {
 //                .font(.title)
 //                .fontWeight(.bold)
 //                .padding()
+//                .foregroundColor(ColorPalette.textPrimary)
 //
+//            // Title TextField
 //            TextField("Task Name", text: $item.title)
 //                .textFieldStyle(RoundedBorderTextFieldStyle())
 //                .padding()
+//                .background(ColorPalette.secondaryBackground)
+//                .cornerRadius(8)
+//                .foregroundColor(ColorPalette.textPrimary)
+//                .padding([.top, .horizontal])
 //
-//            DatePicker("Due Date", selection: Binding(
-//                get: { Date(timeIntervalSince1970: item.dueDate) },
-//                set: { item.dueDate = $0.timeIntervalSince1970 }
-//            ), displayedComponents: .date)
+//            // Description TextField
+//            TextField("Task Description", text: Binding(
+//                get: { item.description ?? "" },
+//                set: { item.description = $0 }
+//            ))
+//            .textFieldStyle(RoundedBorderTextFieldStyle())
+//            .padding()
+//            .background(ColorPalette.secondaryBackground)
+//            .cornerRadius(8)
+//            .foregroundColor(ColorPalette.textPrimary)
+//            .padding([.top, .horizontal])
+//
+//            // Color Picker
+//            Section(header: Text("Task Color").foregroundColor(ColorPalette.textPrimary)) {
+//                Picker("Choose a color", selection: $item.color) {
+//                    Text("Red").tag("Red")
+//                    Text("Blue").tag("Blue")
+//                    Text("Green").tag("Green")
+//                    Text("Yellow").tag("Yellow")
+//                    Text("Default").tag("Default")
+//                }
+//                .pickerStyle(MenuPickerStyle())
 //                .padding()
-//
-//            Button("Save Changes") {
-//                viewModel.updateTask(item: item)
-//                presentationMode.wrappedValue.dismiss()
+//                .background(ColorPalette.secondaryBackground)
+//                .cornerRadius(8)
+//                .foregroundColor(ColorPalette.textPrimary)
+//                .padding([.top, .horizontal])
 //            }
-//            .padding()
-//            .frame(maxWidth: .infinity)
-//            .background(Color.blue)
-//            .foregroundColor(.white)
-//            .cornerRadius(10)
-//            .padding()
-//        }
-//        .padding()
-//    }
-//}
 //
-//using and working
-//struct EditTaskView: View {
-//    @Environment(\.presentationMode) var presentationMode
-//    @ObservedObject var viewModel: ToDoListItemsVM
-//    @State var item: ToDoListitem
-//
-//    var body: some View {
-//        VStack {
-//            Text("Edit Task")
-//                .font(.title)
-//                .fontWeight(.bold)
+//            // Due Date and Time Picker
+//            Section(header: Text("Due Date & Time").foregroundColor(ColorPalette.textPrimary)) {
+//                DatePicker("Select Due Date & Time", selection: Binding(
+//                    get: { Date(timeIntervalSince1970: item.dueDate) },
+//                    set: { item.dueDate = $0.timeIntervalSince1970 }
+//                ), displayedComponents: [.date, .hourAndMinute])
 //                .padding()
-//                .foregroundColor(ColorPalette.textPrimary) // Title text color
-//
-//            TextField("Task Name", text: $item.title)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding()
-//                .background(ColorPalette.secondaryBackground) // TextField background color
+//                .background(ColorPalette.secondaryBackground)
 //                .cornerRadius(8)
-//                .foregroundColor(ColorPalette.textPrimary) // Text color
+//                .foregroundColor(ColorPalette.textPrimary)
 //                .padding([.top, .horizontal])
+//            }
 //
-//            DatePicker("Due Date", selection: Binding(
-//                get: { Date(timeIntervalSince1970: item.dueDate) },
-//                set: { item.dueDate = $0.timeIntervalSince1970 }
-//            ), displayedComponents: .date)
+//            // Notification Picker
+//            Section(header: Text("Notification Alert").foregroundColor(ColorPalette.textPrimary)) {
+//                Picker("Notify me before", selection: $item.notifyBefore) {
+//                    Text("None").tag(nil as TimeInterval?)
+//                    Text("5 minutes").tag(300 as TimeInterval?)
+//                    Text("15 minutes").tag(900 as TimeInterval?)
+//                    Text("30 minutes").tag(1800 as TimeInterval?)
+//                    Text("1 hour").tag(3600 as TimeInterval?)
+//                }
+//                .pickerStyle(MenuPickerStyle())
 //                .padding()
-//                .background(ColorPalette.secondaryBackground) // DatePicker background color
+//                .background(ColorPalette.secondaryBackground)
 //                .cornerRadius(8)
-//                .foregroundColor(ColorPalette.textPrimary) // Text color
+//                .foregroundColor(ColorPalette.textPrimary)
 //                .padding([.top, .horizontal])
+//            }
 //
 //            Spacer()
 //
+//            // Save Changes Button
 //            Button("Save Changes") {
 //                viewModel.updateTask(item: item)
 //                presentationMode.wrappedValue.dismiss()
 //            }
 //            .padding()
 //            .frame(maxWidth: .infinity)
-//            .background(ColorPalette.buttonBackground) // Button background color
-//            .foregroundColor(.white) // Button text color
+//            .background(ColorPalette.buttonBackground)
+//            .foregroundColor(.white)
 //            .cornerRadius(10)
 //            .padding()
 //
+//            // Cancel Button
 //            Button("Cancel") {
 //                presentationMode.wrappedValue.dismiss()
 //            }
 //            .padding()
 //            .frame(maxWidth: .infinity)
-//            .background(ColorPalette.disabledColor) // Cancel button background color
-//            .foregroundColor(.white) // Cancel button text color
+//            .background(ColorPalette.disabledColor)
+//            .foregroundColor(.white)
 //            .cornerRadius(10)
 //            .padding([.bottom, .horizontal])
 //        }
 //        .padding()
-//        .background(ColorPalette.primaryBackground) // Background color for the whole view
+//        .background(ColorPalette.primaryBackground)
 //        .cornerRadius(12)
-//        .shadow(color: ColorPalette.shadowColor, radius: 10, x: 0, y: 10) // Shadow effect
+//        .shadow(color: ColorPalette.shadowColor, radius: 10, x: 0, y: 10)
 //        .padding()
 //    }
 //}
@@ -585,100 +604,120 @@ struct EditTaskView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: ToDoListItemsVM
     @State var item: ToDoListitem
-    
+
     var body: some View {
-        VStack {
-            Text("Edit Task")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding()
-                .foregroundColor(ColorPalette.textPrimary)
+        NavigationView {
+            Form {
+                // Title
+                Section(header: Text("Title").foregroundColor(ColorPalette.textPrimary)) {
+                    TextField("Task Name", text: $item.title)
+                        .textFieldStyle(DefaultTextFieldStyle())
+//                        .foregroundColor(ColorPalette.textPrimary)
+                }
 
-            // Task Title
-            TextField("Task Name", text: $item.title)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .background(ColorPalette.secondaryBackground)
-                .cornerRadius(8)
-                .foregroundColor(ColorPalette.textPrimary)
+                // Description
+                Section(header: Text("Description").foregroundColor(ColorPalette.textPrimary)) {
+                    TextField("Task Description", text: Binding(
+                        get: { item.description ?? "" },
+                        set: { item.description = $0 }
+                    ))
+                        .textFieldStyle(DefaultTextFieldStyle())
+//                        .foregroundColor(ColorPalette.textPrimary)
+                }
 
-            // Task Description
-            TextField("Task Description", text: Binding(
-                get: { item.description ?? "" },
-                set: { item.description = $0 }
-            ))
-            .frame(height: 100)
-            .padding()
-            .background(ColorPalette.secondaryBackground)
-            .cornerRadius(8)
-            .foregroundColor(ColorPalette.textPrimary)
+                // Task Color
+                Section(header: Text("Task Color").foregroundColor(ColorPalette.textPrimary)) {
+                    Picker("Choose a color", selection: $item.color) {
+                        Text("Red").tag("Red")
+                        Text("Blue").tag("Blue")
+                        Text("Green").tag("Green")
+                        Text("Yellow").tag("Yellow")
+                        Text("Default").tag("Default")
+                    }
+                    .pickerStyle(MenuPickerStyle())
+//                    .padding()
+//                    .background(ColorPalette.secondaryBackground)
+                    .cornerRadius(8)
+                    .foregroundColor(ColorPalette.textPrimary)
+                }
+
+                // Due Date & Time
+                Section(header: Text("Due Date & Time").foregroundColor(ColorPalette.textPrimary)) {
+                    DatePicker("Select Due Date & Time", selection: Binding(
+                        get: { Date(timeIntervalSince1970: item.dueDate) },
+                        set: { item.dueDate = $0.timeIntervalSince1970 }
+                    ), displayedComponents: [.date, .hourAndMinute])
+//                        .padding()
+//                        .background(ColorPalette.secondaryBackground)
+                        .cornerRadius(8)
+                        .foregroundColor(ColorPalette.textPrimary)
+                }
+
+                // Notification Picker
+                Section(header: Text("Notification Alert").foregroundColor(ColorPalette.textPrimary)) {
+                    Picker("Notify me before", selection: $item.notifyBefore) {
+                        Text("None").tag(nil as TimeInterval?)
+                        Text("5 minutes").tag(300 as TimeInterval?)
+                        Text("15 minutes").tag(900 as TimeInterval?)
+                        Text("30 minutes").tag(1800 as TimeInterval?)
+                        Text("1 hour").tag(3600 as TimeInterval?)
+                    }
+                    .pickerStyle(MenuPickerStyle())
+//                    .padding()
+//                    .background(ColorPalette.secondaryBackground)
+                    .cornerRadius(8)
+                    .foregroundColor(ColorPalette.textPrimary)
+                }
+
+                // Save Changes Button
+                Section {
+                    Button("Save Changes") {
+                        viewModel.updateTask(item: item)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(ColorPalette.buttonBackground)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding([.top, .horizontal])
+
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(ColorPalette.disabledColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding([.bottom, .horizontal])
+                }
 
 
-            // Due Date Picker
-            DatePicker("Due Date", selection: Binding(
-                get: { Date(timeIntervalSince1970: item.dueDate) },
-                set: { item.dueDate = $0.timeIntervalSince1970 }
-            ), displayedComponents: [.date, .hourAndMinute])
-                .padding()
-                .background(ColorPalette.secondaryBackground)
-                .cornerRadius(8)
-                .foregroundColor(ColorPalette.textPrimary)
-
-            // Notification Toggle
-//            Toggle("Enable Notification", isOn: $item.notificationsEnabled)
-//                .padding()
-//                .background(ColorPalette.secondaryBackground)
-//                .cornerRadius(8)
-//                .foregroundColor(ColorPalette.textPrimary)
-
-            // Task Color Picker
-            ColorPicker("Task Color", selection: $item.color)
-                .padding()
-                .background(ColorPalette.secondaryBackground)
-                .cornerRadius(8)
-
-            // Repeat Interval Picker
-            Picker("Repeat", selection: $item.repeatInterval) {
-                Text("None").tag(0)
-                Text("Daily").tag(1)
-                Text("Weekly").tag(2)
-                Text("Monthly").tag(3)
+                // Cancel Button
+//                Section {
+//                    Button("Cancel") {
+//                        presentationMode.wrappedValue.dismiss()
+//                    }
+//                    .padding()
+//                    .frame(maxWidth: .infinity)
+//                    .background(ColorPalette.disabledColor)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(10)
+//                    .padding([.bottom, .horizontal])
+//                }
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-            .background(ColorPalette.secondaryBackground)
-            .cornerRadius(8)
-
-            Spacer()
-
-            // Save Button
-            Button("Save Changes") {
-                viewModel.updateTask(item: item)
-                presentationMode.wrappedValue.dismiss()
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(ColorPalette.buttonBackground)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-
-            // Cancel Button
-            Button("Cancel") {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(ColorPalette.disabledColor)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .background(ColorPalette.primaryBackground.ignoresSafeArea())
+            .navigationTitle("Edit Task")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .padding()
-        .background(ColorPalette.primaryBackground)
-        .cornerRadius(12)
-        .shadow(color: ColorPalette.shadowColor, radius: 10, x: 0, y: 10)
-        .padding()
     }
 }
+
+// Preview
+//#Preview {
+//    EditTaskView(viewModel: ToDoListItemsVM(), item: ToDoListitem(id: UUID(), title: "Sample Task", description: "Task Description", color: "Red", dueDate: Date().timeIntervalSince1970, notifyBefore: 300), presentationMode: .constant(.active))
+//}
 
 
 
@@ -693,3 +732,4 @@ extension ToDoListItemsVM {
         }
     }
 }
+

@@ -278,7 +278,7 @@ struct MoodleInstructionsView: View {
 
     var body: some View {
         ZStack {
-            ColorPalette.primaryBackground // Ensures full-screen background color
+            ColorPalette.primaryBackground 
                 .edgesIgnoringSafeArea(.all)
 
             VStack(alignment: .leading, spacing: 10) {
