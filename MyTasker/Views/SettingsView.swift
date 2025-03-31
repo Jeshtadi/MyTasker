@@ -272,6 +272,8 @@ struct SettingsView: View {
                 NavigationLink("Account", destination: AccountView())
                 NavigationLink("Notifications", destination: NotificationsView())
                 NavigationLink("Display", destination: DisplayView())
+                NavigationLink("Recently Deleted", destination: RecentlyDeletedView())
+                                
             }
             
             Section {
@@ -478,59 +480,6 @@ struct AccountView: View {
 }
 
 
-//not working
-//struct NotificationsView: View {
-//    @State private var notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled") {
-//        didSet {
-//            UserDefaults.standard.set(notificationsEnabled, forKey: "notificationsEnabled")
-//        }
-//    }
-//
-//    var body: some View {
-//        NavigationStack {
-//            Form {
-//                Toggle("Enable Notifications", isOn: $notificationsEnabled)
-//                    .onChange(of: notificationsEnabled) { newValue in
-//                        if newValue {
-//                            // Handle enabling notifications
-//                            requestNotificationPermission()
-//                        } else {
-//                            // Handle disabling notifications
-//                            removeScheduledNotifications()
-//                        }
-//                    }
-//            }
-//            .navigationTitle("Notifications")
-//        }
-//    }
-//
-//    func requestNotificationPermission() {
-//        let center = UNUserNotificationCenter.current()
-//        center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-//            if granted {
-//                print("Notification permission granted.")
-//                // Update the setting to reflect that notifications are enabled
-//                DispatchQueue.main.async {
-//                    notificationsEnabled = true
-//                }
-//            } else {
-//                print("Notification permission denied.")
-//                // Update the setting to reflect that notifications are denied
-//                DispatchQueue.main.async {
-//                    notificationsEnabled = false
-//                }
-//            }
-//        }
-//    }
-//
-//    func removeScheduledNotifications() {
-//        let center = UNUserNotificationCenter.current()
-//        center.removeAllPendingNotificationRequests() // This will remove all pending notifications
-//        print("All scheduled notifications have been removed.")
-//    }
-//}
-
-
 //struct NotificationsView: View {
 //    @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = false
 //
@@ -566,8 +515,39 @@ struct AccountView: View {
 //    }
 //}
 
-import SwiftUI
-import UserNotifications
+
+// diabled workes
+//struct NotificationsView: View {
+//    @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = false
+//
+//    var body: some View {
+//        NavigationStack {
+//            Form {
+//                Toggle("Enable Notifications", isOn: $notificationsEnabled)
+//                    .onChange(of: notificationsEnabled) { newValue in
+//                        if newValue {
+//                            NotificationManager.shared.requestPermission { granted in
+//                                if granted {
+//                                    UserDefaults.standard.set(true, forKey: "notificationsEnabled")
+//                                    print("Notifications enabled")
+//                                } else {
+//                                    UserDefaults.standard.set(false, forKey: "notificationsEnabled")
+//                                    print("Permission denied")
+//                                    notificationsEnabled = false
+//                                }
+//                            }
+//                        } else {
+//                            NotificationManager.shared.removeAllNotifications()
+//                            UserDefaults.standard.set(false, forKey: "notificationsEnabled")
+//                            print("Notifications disabled")
+//                        }
+//                    }
+//            }
+//            .navigationTitle("Notifications")
+//        }
+//    }
+//}
+
 
 struct NotificationsView: View {
     @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = false
@@ -583,9 +563,10 @@ struct NotificationsView: View {
                                     UserDefaults.standard.set(true, forKey: "notificationsEnabled")
                                     print("Notifications enabled")
                                 } else {
+                                    // If permission is not granted, revert toggle and notify user
                                     UserDefaults.standard.set(false, forKey: "notificationsEnabled")
-                                    print("Permission denied")
                                     notificationsEnabled = false
+                                    print("Permission denied")
                                 }
                             }
                         } else {
@@ -596,10 +577,13 @@ struct NotificationsView: View {
                     }
             }
             .navigationTitle("Notifications")
+            .onAppear {
+                // Ensure the toggle reflects the stored value in UserDefaults
+                notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
+            }
         }
     }
 }
-
 
 
 
@@ -641,6 +625,25 @@ struct DisplayView: View {
         }
     }
 }
+
+struct RecentlyDeletedView: View {
+    @State private var deletedTasks: [String] = []
+    var body: some View {
+        List(deletedTasks, id: \.self) { task in
+            Text(task)
+        }
+        .navigationTitle("Recently Deleted")
+        .onAppear {
+            fetchDeletedTasks()
+        }
+    }
+    
+    func fetchDeletedTasks() {
+      
+        deletedTasks = ["Deleted Task 1", "Deleted Task 2", "Deleted Task 3"]
+    }
+}
+
 
 
 

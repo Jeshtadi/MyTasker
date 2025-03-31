@@ -32,6 +32,7 @@ struct ToDoListitem: Codable, Identifiable {
     var color: String?
     var repeatInterval: TimeInterval?
     var notifyBefore: TimeInterval?
+    var isDeleted: Bool = false
     
     mutating func setDone(_ state: Bool) {
         isDone = state
@@ -49,9 +50,9 @@ struct ToDoListitem: Codable, Identifiable {
 
 //NEED TO ADD DONE, IN PROGRESS,TODOS DB
 //MAYBE NEED TO DO PAGES
-//if there is no description for my tasks then if should cover the gap
-//implement edit for each option task
-//implement settings
-//update profile page
+//DESCRIPTION OF MOODLE NEEDS FIXING
+//EDIT TASK NEEDS NOTIFICATION
+//NOTIFACTIONS WORKS (HALF)
+//CALENDER VIEW DESNGING
 //implemetn accessibility features
-// calender view the tasks date shouldnt be depended on the tilte month
+

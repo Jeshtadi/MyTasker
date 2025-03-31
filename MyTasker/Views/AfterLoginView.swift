@@ -1143,6 +1143,18 @@ struct AfterLoginView: View {
         }
     }
     
+//    func requestNotificationPermission() {
+//        NotificationManager.shared.requestPermission { granted in
+//            if !granted {
+//                NotificationManager.shared.removeAllNotifications()
+//                showNotificationAlert = true
+//            }
+//        }
+//    }
+
+    
+    
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -1222,6 +1234,7 @@ struct AfterLoginView: View {
                 profileVM.fetchUser()
                 selectedCategory = "todo"
                 requestNotificationPermission() // Now using NotificationManager
+                
             }
             .alert(isPresented: $showNotificationAlert) {
                 Alert(
@@ -1235,6 +1248,7 @@ struct AfterLoginView: View {
                     secondaryButton: .cancel()
                 )
             }
+
         
         }
     }

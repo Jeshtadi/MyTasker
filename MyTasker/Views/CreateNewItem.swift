@@ -46,8 +46,6 @@ struct CreateNewItem: View {
 //                        .foregroundColor(ColorPalette.textPrimary)
 //                }
         
-
-
                 // Due Date
                 Section(header: Text("Due Date").foregroundColor(ColorPalette.textPrimary)) {
                     DatePicker("Select date", selection: $viewModel.dueDate)

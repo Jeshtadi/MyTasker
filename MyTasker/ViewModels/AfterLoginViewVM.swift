@@ -15,15 +15,78 @@ class AfterLoginViewVM: ObservableObject{
         self.userId = userId
     }
     
-    func delete(id: String){
-        //reference to databae
+//    func delete(id: String){
+//        //reference to databae
+//        let db = Firestore.firestore()
+//        db.collection("users")
+//            .document(userId)
+//            .collection("todos")
+//            .document(id)
+//            .delete()
+//    }
+    
+//    func delete(id: String) {
+//        let db = Firestore.firestore()
+//        db.collection("users")
+//            .document(userId)
+//            .collection("todos")
+//            .document(id)
+//            .updateData(["isDeleted": true]) { error in
+//                if let error = error {
+//                    print("Error updating document: \(error.localizedDescription)")
+//                } else {
+//                    print("Task marked as deleted.")
+//                }
+//            }
+//    }
+    
+    
+    func delete(id: String) {
         let db = Firestore.firestore()
-        db.collection("users")
+
+        // Reference to the task document
+        let taskRef = db.collection("users")
             .document(userId)
             .collection("todos")
             .document(id)
-            .delete()
+
+        // Get the task data before updating (in case you need to preserve it for the "recently deleted" section)
+        taskRef.getDocument { (document, error) in
+            if let error = error {
+                print("Error fetching document: \(error.localizedDescription)")
+                return
+            }
+
+            guard let document = document, document.exists else {
+                print("Document does not exist.")
+                return
+            }
+
+            // Move the task to the "recently deleted" collection
+            db.collection("users")
+                .document(self.userId)
+                .collection("recently_deleted")
+                .document(id)
+                .setData(document.data()!) { error in
+                    if let error = error {
+                        print("Error moving document to 'recently_deleted': \(error.localizedDescription)")
+                    } else {
+                        print("Task successfully moved to 'recently_deleted'.")
+                    }
+                }
+
+            // Now mark the task as deleted in the original collection
+            taskRef.updateData(["isDeleted": true]) { error in
+                if let error = error {
+                    print("Error updating document: \(error.localizedDescription)")
+                } else {
+                    print("Task marked as deleted.")
+                }
+            }
+        }
     }
+
+
 }
 
 

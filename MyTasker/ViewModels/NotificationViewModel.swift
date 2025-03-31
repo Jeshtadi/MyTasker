@@ -13,12 +13,12 @@ class NotificationViewModel: ObservableObject {
 //    }
 
     /// Schedule a notification when a new task is added
-    func addTaskNotification(task: ToDoListitem) {
-        NotificationManager.shared.scheduleNotification(for: task)
-    }
+//    func addTaskNotification(task: ToDoListitem) {
+//        NotificationManager.shared.scheduleNotification(for: task)
+//    }
 
     /// Remove notification if task is deleted
-    func removeTaskNotification(taskId: String) {
-        NotificationManager.shared.removeNotification(for: taskId)
-    }
+//    func removeTaskNotification(taskId: String) {
+//        NotificationManager.shared.removeNotification(for: taskId)
+//    }
 }

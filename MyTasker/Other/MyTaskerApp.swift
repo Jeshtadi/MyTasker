@@ -66,13 +66,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         FirebaseApp.configure()
 
         
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-//            if granted {
-//                print("Notification permission granted.")
-//            } else {
-//                print("Notification permission denied.")
-//            }
-//        }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            if granted {
+                print("Notification permission granted.")
+            } else {
+                print("Notification permission denied.")
+            }
+        }
 
         UserDefaults.standard.set(false, forKey: "hideCheckmarkMessage")
 

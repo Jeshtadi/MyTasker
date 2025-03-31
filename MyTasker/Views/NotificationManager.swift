@@ -185,38 +185,76 @@
 //}
 
 
-
+//
 //TESTING
 import Foundation
 import UserNotifications
 import SwiftUI
 
+//class NotificationManager {
+//    static let shared = NotificationManager()
+//
+//    private init() {}
+//
+//    func requestPermission(completion: @escaping (Bool) -> Void) {
+//        let notificationCenter = UNUserNotificationCenter.current()
+//        notificationCenter.getNotificationSettings { settings in
+//            DispatchQueue.main.async {
+//                switch settings.authorizationStatus {
+//                case .authorized:
+//                    print("Notifications are already authorized.")
+//                    completion(true)
+//                case .denied:
+//                    print("Notifications are denied.")
+//                    completion(false)
+//                case .notDetermined:
+//                    notificationCenter.requestAuthorization(options: [.alert, .sound]) { didAllow, error in
+//                        DispatchQueue.main.async {
+//                            if didAllow {
+//                                print("Notifications granted.")
+//                                completion(true)
+//                            } else {
+//                                print("Notifications denied.")
+//                                completion(false)
+//                            }
+//                        }
+//                    }
+//                default:
+//                    completion(false)
+//                }
+//            }
+//        }
+//    }
+//WORKING AND USING
+
 class NotificationManager {
     static let shared = NotificationManager()
-
-    private init() {}
-
+    
     func requestPermission(completion: @escaping (Bool) -> Void) {
         let notificationCenter = UNUserNotificationCenter.current()
+        
         notificationCenter.getNotificationSettings { settings in
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
-                case .authorized:
-                    print("Notifications are already authorized.")
+                case .authorized, .provisional:
+                    print("Notifications granted.")
+                    UserDefaults.standard.set(true, forKey: "notificationsEnabled")
                     completion(true)
                 case .denied:
-                    print("Notifications are denied.")
+                    print("Notifications denied.")
+                    UserDefaults.standard.set(false, forKey: "notificationsEnabled")
                     completion(false)
                 case .notDetermined:
-                    notificationCenter.requestAuthorization(options: [.alert, .sound]) { didAllow, error in
+                    notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
                         DispatchQueue.main.async {
-                            if didAllow {
-                                print("Notifications granted.")
-                                completion(true)
+                            if granted {
+                                print("Notifications allowed.")
+                                UserDefaults.standard.set(true, forKey: "notificationsEnabled")
                             } else {
                                 print("Notifications denied.")
-                                completion(false)
+                                UserDefaults.standard.set(false, forKey: "notificationsEnabled")
                             }
+                            completion(granted)
                         }
                     }
                 default:
@@ -225,14 +263,54 @@ class NotificationManager {
             }
         }
     }
+    
+        // working and using
+    
+//    func scheduleNotification(for task: ToDoListitem) {
+//        guard let notifyBefore = task.notifyBefore else { return }
+//        
+//        let notificationTime = task.dueDate - notifyBefore
+//        if notificationTime < Date().timeIntervalSince1970 {
+//            print("Notification time is in the past. Skipping.")
+//            return
+//        }
+//        
+//        let content = UNMutableNotificationContent()
+//        content.title = "Task Reminder"
+//
+//        let dueDate = Date(timeIntervalSince1970: task.dueDate)
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = .medium
+//        dateFormatter.timeStyle = .short
+//        let formattedDueDate = dateFormatter.string(from: dueDate)
+//
+//        let taskDescription = task.description ?? "No description provided"
+//        content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
+//        content.sound = .default
+//
+//        
+//        let triggerDate = Date(timeIntervalSince1970: notificationTime)
+//        let trigger = UNCalendarNotificationTrigger(
+//            dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
+//            repeats: false
+//        )
+//        
+//        let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
+//        UNUserNotificationCenter.current().add(request) { error in
+//            if let error = error {
+//                print("Error scheduling notification: \(error.localizedDescription)")
+//            } else {
+//                print("Notification scheduled for \(task.title) at \(triggerDate)")
+//            }
+//        }
+//    }
 
     func scheduleNotification(for task: ToDoListitem) {
-        guard UserDefaults.standard.bool(forKey: "notificationsEnabled") else {
-            print("Notifications are disabled. Skipping scheduling.")
+
+        guard !task.isDeleted, let notifyBefore = task.notifyBefore else {
+            print("Task has been deleted or no notification time is set.")
             return
         }
-
-        guard let notifyBefore = task.notifyBefore else { return }
 
         let notificationTime = task.dueDate - notifyBefore
         if notificationTime < Date().timeIntervalSince1970 {
@@ -242,7 +320,15 @@ class NotificationManager {
 
         let content = UNMutableNotificationContent()
         content.title = "Task Reminder"
-        content.body = "Your task: \(task.title)"
+
+        let dueDate = Date(timeIntervalSince1970: task.dueDate)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        let formattedDueDate = dateFormatter.string(from: dueDate)
+
+        let taskDescription = task.description ?? "No description provided"
+        content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
         content.sound = .default
 
         let triggerDate = Date(timeIntervalSince1970: notificationTime)
@@ -261,6 +347,7 @@ class NotificationManager {
         }
     }
 
+    
     func removeNotification(for taskId: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [taskId])
         print("Removed notification for task ID: \(taskId)")
