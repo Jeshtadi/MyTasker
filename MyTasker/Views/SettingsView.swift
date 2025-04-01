@@ -3,258 +3,15 @@
 //  MyTasker
 //
 //  Created by Anushya Jeshtadi on 26/01/2025.
-//
 
-// working
-//import SwiftUI
-//
-//struct SettingsView: View {
-//    @StateObject private var viewModel = ProfileVM()
-//    
-//    @State private var currentPassword = ""
-//    @State private var showAlert = false
-//    @State private var alertMessage = ""
-//    var body: some View {
-//        List {
-//            Section {
-//                NavigationLink("Account", destination: AccountView())
-//                NavigationLink("Notifications", destination: NotificationsView())
-//                NavigationLink("Display", destination: DisplayView())
-//            }
-//            
-//            Section {
-//                SecureField("Enter Current Password", text: $currentPassword)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .padding()
-//                
-//                Button(action: {
-//                    viewModel.deleteAccount(currentPassword: currentPassword){ error in
-//                        if let error = error {
-//                            alertMessage = "Error: \(error.localizedDescription)"
-//                        } else {
-//                            alertMessage = "Account deleted successfully."
-//                        }
-//                        showAlert = true
-//                    }
-//                }) {
-//                    Text("Delete Account")
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
-//                        .foregroundColor(.white)
-//                        .background(Color.red)
-//                        .cornerRadius(10)
-//                        .shadow(radius: 3)
-//                }
-//                .alert(isPresented: $showAlert) {
-//                    Alert(title: Text("Account Deletion"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-//                }
-//                .padding(.top, 10)
-//
-//                Button(action: {
-//                    viewModel.logOut()
-//                }) {
-//                    Text("Log Out")
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
-//                        .foregroundColor(.white)
-//                        .background(ColorPalette.buttonBackground)
-//                        .cornerRadius(10)
-//                        .shadow(radius: 3)
-//                }
-////                Button("Log Out", role: .destructive) {
-////                    // Log out action
-////                }
-//            }
-//        }
-//        .navigationTitle("Settings")
-//    }
-//}
-//
-//// Account Page - Edit username and password
-////import SwiftUI
-//
-//struct AccountView: View {
-//    @StateObject private var viewModel = ProfileVM()
-//
-//    @State private var firstName: String = ""
-//    @State private var lastName: String = ""
-////    @State private var email: String = ""
-//    @State private var currentPassword = ""
-//    @State private var newPassword: String = ""
-//    @State private var confirmPassword: String = ""
-//
-//    var body: some View {
-//        NavigationView {
-//            ScrollView {
-//                VStack {
-//                    if let user = viewModel.user {
-//                        accountDetails(user: user)
-//                    }
-//                }
-//                .padding()
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                .background(ColorPalette.primaryBackground.ignoresSafeArea())
-//                .navigationTitle("Account")
-//            }
-//            .onAppear {
-//                viewModel.fetchUser() // Fetch the current user's data
-//            }
-//        }
-//    }
-//    
-//    @ViewBuilder
-//    func accountDetails(user: User) -> some View {
-//        // Populate text fields with current user details
-//        Group {
-//            Text("First Name:")
-//            TextField("First Name", text: $firstName)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding(.horizontal)
-//                .onAppear {
-//                    firstName = user.name // Set initial value to current user's name
-//                }
-//            
-//            Text("Last Name:")
-//            TextField("Last Name", text: $lastName)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding(.horizontal)
-//                .onAppear {
-//                    lastName = user.lastName // Set initial value to current user's last name
-//                }
-//            
-////            Text("Email:")
-////            TextField("Email", text: $email)
-////                .textFieldStyle(RoundedBorderTextFieldStyle())
-////                .padding(.horizontal)
-////                .onAppear {
-////                    email = user.email // Set initial value to current user's email
-////                }
-//            
-//            Divider()
-//            
-//            Text("New Password:")
-//            SecureField("New Password", text: $newPassword)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding(.horizontal)
-//            
-//            Text("Confirm Password:")
-//            SecureField("Confirm Password", text: $confirmPassword)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding(.horizontal)
-//        }
-//        
-//        // Save Changes Button
-//        Button(action: {
-//            saveChanges(user: user)
-//        }) {
-//            Text("Save Changes")
-//                .frame(maxWidth: .infinity)
-//                .padding()
-//                .foregroundColor(.white)
-//                .background(ColorPalette.buttonBackground)
-//                .cornerRadius(10)
-//                .shadow(radius: 3)
-//        }
-//        .padding(.top)
-//    }
-//    
-//    func saveChanges(user: User) {
-//        // Check if passwords match
-//        guard newPassword == confirmPassword else {
-//            print("Passwords do not match!")
-//            return
-//        }
-//
-//        // Save the updated user details
-//        viewModel.updateUserInfo(firstName: firstName, lastName: lastName)
-//
-//        // Only update email if it was changed
-////        if email != user.email {
-////            viewModel.updateEmail(newEmail: email)
-////        }
-//
-//        // Only update password if a new password is entered
-//        if !newPassword.isEmpty {
-//            viewModel.updatePassword(newPassword: newPassword, currentPassword: currentPassword) { error in
-//                if let error = error {
-//                    print("Error updating password: \(error)")
-//                } else {
-//                    print("Password updated successfully!")
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//
-//
-//// Notifications Page - Toggle notifications on/off
-//struct NotificationsView: View {
-//    @State private var notificationsEnabled = true
-//
-//    var body: some View {
-//        NavigationStack {
-//            Form {
-//                Toggle("Enable Notifications", isOn: $notificationsEnabled)
-//            }
-//            .navigationTitle("Notifications")
-//        }
-//    }
-//}
-//
-//// Display Page - Choose dark, light, or system default mode
-//import SwiftUI
-//
-//struct DisplayView: View {
-//    @AppStorage("colorScheme") private var colorScheme: String = "System"
-//    
-//    var body: some View {
-//        NavigationStack {
-//            Form {
-//                Picker("Appearance", selection: $colorScheme) {
-//                    Text("Light").tag("Light")
-//                    Text("Dark").tag("Dark")
-//                    Text("System Default").tag("System")
-//                }
-//                .pickerStyle(SegmentedPickerStyle())
-//                .onChange(of: colorScheme) { oldValue, newValue in
-//                    updateAppearance(to: newValue)
-//                }
-//            }
-//            .navigationTitle("Display")
-//        }
-//        .onAppear {
-//            updateAppearance(to: colorScheme)
-//        }
-//    }
-//    
-//    /// Updates the UI appearance based on the selected color scheme.
-//    private func updateAppearance(to scheme: String) {
-//        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//           let window = scene.windows.first {
-//            switch scheme {
-//            case "Light":
-//                window.overrideUserInterfaceStyle = .light
-//            case "Dark":
-//                window.overrideUserInterfaceStyle = .dark
-//            default:
-//                window.overrideUserInterfaceStyle = .unspecified
-//            }
-//        }
-//    }
-//}
-//
-//
-//
-//#Preview {
-//    NavigationStack { // Wrap SettingsView in NavigationStack only in preview
-//        AccountView()
-//    }
-//}
 
 
 import SwiftUI
 import UserNotifications
+import FirebaseFirestore
+import FirebaseAuth
+
+
 
 struct SettingsView: View {
     @StateObject private var viewModel = ProfileVM()
@@ -267,116 +24,125 @@ struct SettingsView: View {
     @State private var showDeletionWarning = false
 
     var body: some View {
-        List {
-            Section {
-                NavigationLink("Account", destination: AccountView())
-                NavigationLink("Notifications", destination: NotificationsView())
-                NavigationLink("Display", destination: DisplayView())
-                NavigationLink("Recently Deleted", destination: RecentlyDeletedView())
-                                
-            }
-            
-            Section {
-                Button(action: {
-                    showDeleteConfirmation.toggle()
-                    showDeletionWarning = true
-                }) {
-                    Text("Delete Account")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.red)
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
-                }
-                .padding(.top, 10)
+        VStack(alignment: .leading) {
+            Text("Settings")
+                .font(.largeTitle)
+                .textCase(nil)
+                .bold()
+                .padding(.horizontal)
+                .padding(.top, 20)
+            List {
                 
-                Button(action: {
-                    viewModel.logOut()
-                }) {
-                    Text("Log Out")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(ColorPalette.buttonBackground)
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
+                Section {
+                    NavigationLink("Account", destination: AccountView())
+                    NavigationLink("Notifications", destination: NotificationsView())
+                    NavigationLink("Display", destination: DisplayView())
+                    //                NavigationLink("Recently Deleted", destination: RecentlyDeletedView())
+                    
                 }
-            }
-        }
-        .navigationTitle("Settings")
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Account Deletion"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-        }
-        .sheet(isPresented: $showDeleteConfirmation) {
-            VStack {
-                Text("Warning: All your data will be deleted. Are you sure you want to delete your account?")
-                    .padding()
-                    .foregroundColor(.red)
-                    .multilineTextAlignment(.center)
                 
-                HStack {
-                    Button("Yes") {
-                        showDeleteConfirmation = false
-                        showPasswordEntry = true
+                Section {
+                    Button(action: {
+                        showDeleteConfirmation.toggle()
+                        showDeletionWarning = true
+                    }) {
+                        Text("Delete Account")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color.red)
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
-
-                    Button("Cancel") {
-                        
-                        showDeleteConfirmation = false
+                    .padding(.top, 10)
+                    
+                    Button(action: {
+                        viewModel.logOut()
+                    }) {
+                        Text("Log Out")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(ColorPalette.buttonBackground)
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.gray)
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
                 }
-                .padding(.top, 10)
             }
-            .padding()
-        }
-        .sheet(isPresented: $showPasswordEntry) {
-            VStack {
-                Text("Please enter your current password to confirm account deletion:")
-                    .padding()
-                
-                SecureField("Enter Current Password", text: $currentPassword)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                Button(action: {
-                    viewModel.deleteAccount(currentPassword: currentPassword) { error in
-                        if let _ = error {  // Directly check for error
-                            alertMessage = "Invalid credentials. Please try again."
-                        } else {
-                            alertMessage = "Account deleted successfully."
+            .navigationTitle("Settings")
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Account Deletion"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
+            .sheet(isPresented: $showDeleteConfirmation) {
+                VStack {
+                    Text("Warning: All your data will be deleted. Are you sure you want to delete your account?")
+                        .padding()
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                    
+                    HStack {
+                        Button("Yes") {
+                            showDeleteConfirmation = false
+                            showPasswordEntry = true
                         }
-                        showAlert = true
-                    }
-                    showPasswordEntry = false
-                }) {
-                    Text("Confirm Deletion")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .foregroundColor(.white)
-                        .background(Color.red)
+                        .background(Color.green)
                         .cornerRadius(10)
-                        .shadow(radius: 3)
-                }
-                .padding(.top, 10)
-                
-                Button("Cancel") {
-                    showPasswordEntry = false
+                        .foregroundColor(.white)
+                        
+                        Button("Cancel") {
+                            
+                            showDeleteConfirmation = false
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.gray)
+                        .cornerRadius(10)
+                        .foregroundColor(.white)
+                    }
+                    .padding(.top, 10)
                 }
                 .padding()
-                .foregroundColor(.blue)
             }
-            .padding()
+            .sheet(isPresented: $showPasswordEntry) {
+                VStack {
+                    Text("Please enter your current password to confirm account deletion:")
+                        .padding()
+                    
+                    SecureField("Enter Current Password", text: $currentPassword)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    
+                    Button(action: {
+                        viewModel.deleteAccount(currentPassword: currentPassword) { error in
+                            if let _ = error {  // Directly check for error
+                                alertMessage = "Invalid credentials. Please try again."
+                            } else {
+                                alertMessage = "Account deleted successfully."
+                            }
+                            showAlert = true
+                        }
+                        showPasswordEntry = false
+                    }) {
+                        Text("Confirm Deletion")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color.red)
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
+                    }
+                    .padding(.top, 10)
+                    
+                    Button("Cancel") {
+                        showPasswordEntry = false
+                    }
+                    .padding()
+                    .foregroundColor(.blue)
+                }
+                .padding()
+            }
         }
     }
 }
@@ -626,23 +392,96 @@ struct DisplayView: View {
     }
 }
 
-struct RecentlyDeletedView: View {
-    @State private var deletedTasks: [String] = []
-    var body: some View {
-        List(deletedTasks, id: \.self) { task in
-            Text(task)
-        }
-        .navigationTitle("Recently Deleted")
-        .onAppear {
-            fetchDeletedTasks()
-        }
-    }
-    
-    func fetchDeletedTasks() {
-      
-        deletedTasks = ["Deleted Task 1", "Deleted Task 2", "Deleted Task 3"]
-    }
-}
+//struct RecentlyDeletedView: View {
+//    @State private var deletedTasks: [ToDoListitem] = []
+//    @State private var isLoading = true
+//    @StateObject private var viewModel = ToDoListItemsVM()
+
+//    
+//    private let db = Firestore.firestore()
+//
+//    var body: some View {
+//        VStack {
+//            if isLoading {
+//                ProgressView("Loading...")
+//                    .padding()
+//            } else {
+//                Text("Recently Deleted")
+//                    .font(.title)
+//                    .fontWeight(.bold)
+//                    .padding()
+//
+//                List {
+//                    ForEach(deletedTasks) { task in
+//                        HStack {
+//                            Text(task.title)
+//                            Spacer()
+//                            Button(action: {
+//                                restoreTask(task)
+//                            }) {
+//                                Text("Restore")
+//                                    .foregroundColor(.blue)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        .onAppear {
+//            fetchDeletedTasks() // Fetch deleted tasks when the view appears
+//        }
+//    }
+//
+//    func fetchDeletedTasks() {
+//        guard let uId = Auth.auth().currentUser?.uid else { return }
+//
+//        db.collection("users")
+//            .document(uId)
+//            .collection("todos")
+//            .getDocuments { snapshot, error in
+//                guard let documents = snapshot?.documents, error == nil else {
+//                    print("Failed to fetch tasks: \(error?.localizedDescription ?? "Unknown error")")
+//                    return
+//                }
+//
+//                DispatchQueue.main.async {
+//                    deletedTasks = documents.compactMap { doc in
+//                        let data = doc.data()
+//
+//                        guard let isDeleted = data["isDeleted"] as? Bool, isDeleted else {
+//                            return nil // Ignore non-deleted tasks
+//                        }
+//
+//                        return ToDoListitem(
+//                            id: data["id"] as? String ?? UUID().uuidString,
+//                            title: data["title"] as? String ?? "",
+//                            description: data["description"] as? String ?? "",
+//                            dueDate: data["dueDate"] as? TimeInterval ?? 0,
+//                            createDate: data["createDate"] as? TimeInterval ?? 0,
+//                            duration: data["duration"] as? TimeInterval,
+//                            isDone: data["isDone"] as? Bool ?? false,
+//                            color: data["color"] as? String ?? "Default",
+//                            repeatInterval: data["repeatInterval"] as? TimeInterval,
+//                            notifyBefore: data["notifyBefore"] as? TimeInterval
+//                        )
+//                    }
+//                    isLoading = false
+//                }
+//            }
+//    }
+//
+//
+//
+//    func restoreTask(_ task: ToDoListitem) {
+//        var updatedTask = task
+//        updatedTask.isDeleted = false // Set isDeleted to false to restore the task
+//        
+//        viewModel.updateTask(item: updatedTask) // Update the task in Firestore
+//        deletedTasks.removeAll { $0.id == task.id } // Remove from the list of deleted tasks
+//    }
+//}
+//
+
 
 
 

@@ -3,41 +3,9 @@
 //  MyTasker
 //
 //  Created by Anushya Jeshtadi on 23/01/2025.
-//
-//
-//import SwiftUI
-//
-//struct ColorPalette {
-//    // Colors that adapt to light and dark modes
-//    static let primaryBackground = Color(dynamicLight: "#FFFFFF", dark: "#061826") // Light mode: white, Dark mode: custom color
-//    static let secondaryBackground = Color(dynamicLight: "#F5F5F5", dark: "#1A303F")
-//    static let accentColor = Color(dynamicLight: "#2B595C", dark: "#2B595C") // Same color for both modes
-//    static let textPrimary = Color(dynamicLight: "#000000", dark: "#E6D6C1")
-//    static let buttonBackground = Color(dynamicLight: "#607D7E", dark: "#607D7E") // Same for both modes
-//}
-// 
-//extension Color {
-//    init(dynamicLight lightHex: String, dark darkHex: String) {
-//        self.init(UIColor { traitCollection in
-//            let hex = traitCollection.userInterfaceStyle == .dark ? darkHex : lightHex
-//            return UIColor(hex: hex)
-//        })
-//    }
-//}
-// 
-//extension UIColor {
-//    convenience init(hex: String) {
-//        let scanner = Scanner(string: hex)
-//        scanner.currentIndex = hex.hasPrefix("#") ? hex.index(after: hex.startIndex) : hex.startIndex
-//        var rgb: UInt64 = 0
-//        scanner.scanHexInt64(&rgb)
-//        let red = CGFloat((rgb >> 16) & 0xFF) / 255.0
-//        let green = CGFloat((rgb >> 8) & 0xFF) / 255.0
-//        let blue = CGFloat(rgb & 0xFF) / 255.0
-//        self.init(red: red, green: green, blue: blue, alpha: 1.0)
-//    }
-//}
 
+
+//using
 
 import SwiftUI
 
@@ -72,19 +40,6 @@ extension Color {
     }
 }
 
-//extension Color {
-//    init(hex: String) {
-//        let hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "#", with: "")
-//        var rgb: UInt64 = 0
-//        Scanner(string: hexString).scanHexInt64(&rgb)
-//
-//        let red = Double((rgb & 0xFF0000) >> 16) / 255.0
-//        let green = Double((rgb & 0x00FF00) >> 8) / 255.0
-//        let blue = Double(rgb & 0x0000FF) / 255.0
-//
-//        self.init(red: red, green: green, blue: blue)
-//    }
-//}
  
 extension UIColor {
     convenience init(hex: String) {

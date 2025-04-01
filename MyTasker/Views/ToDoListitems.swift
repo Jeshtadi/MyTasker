@@ -382,7 +382,7 @@
 
 import SwiftUI
 import FirebaseFirestore
-
+import UserNotifications
 
 //uising todolist
 struct ToDoListitems: View {
@@ -407,8 +407,7 @@ struct ToDoListitems: View {
             
             Divider()
                 .background(Color.black.opacity(0.5))
-            
-            // Additional Task Info
+        
             VStack(alignment: .leading, spacing: 5) {
                 Text("Due: \(Date(timeIntervalSince1970: item.dueDate).formatted(date: .abbreviated, time: .shortened))")
                     .font(.system(size: 16))
@@ -626,32 +625,149 @@ struct ToDoListitems: View {
 //}
 
 
+//struct EditTaskView: View {
+//    @Environment(\.presentationMode) var presentationMode
+//    @ObservedObject var viewModel: ToDoListItemsVM
+//    @State var item: ToDoListitem
+//
+//    var body: some View {
+//        NavigationView {
+//            Form {
+//            
+//                Section(header: Text("Title").foregroundColor(ColorPalette.textPrimary)) {
+//                    TextField("Task Name", text: $item.title)
+//                        .textFieldStyle(DefaultTextFieldStyle())
+//
+//                }
+//
+//                // Description
+//                Section(header: Text("Description").foregroundColor(ColorPalette.textPrimary)) {
+//                    TextField("Task Description", text: Binding(
+//                        get: { item.description ?? "" },
+//                        set: { item.description = $0 }
+//                    ))
+//                        .textFieldStyle(DefaultTextFieldStyle())
+////                        .foregroundColor(ColorPalette.textPrimary)
+//                }
+//
+//                // Task Color
+//                Section(header: Text("Task Color").foregroundColor(ColorPalette.textPrimary)) {
+//                    Picker("Choose a color", selection: $item.color) {
+//                        Text("Red").tag("Red")
+//                        Text("Blue").tag("Blue")
+//                        Text("Green").tag("Green")
+//                        Text("Yellow").tag("Yellow")
+//                        Text("Default").tag("Default")
+//                    }
+//                    .pickerStyle(MenuPickerStyle())
+////                    .padding()
+////                    .background(ColorPalette.secondaryBackground)
+//                    .cornerRadius(8)
+//                    .foregroundColor(ColorPalette.textPrimary)
+//                }
+//
+//                // Due Date & Time
+//                Section(header: Text("Due Date & Time").foregroundColor(ColorPalette.textPrimary)) {
+//                    DatePicker("Select Due Date & Time", selection: Binding(
+//                        get: { Date(timeIntervalSince1970: item.dueDate) },
+//                        set: { item.dueDate = $0.timeIntervalSince1970 }
+//                    ), displayedComponents: [.date, .hourAndMinute])
+////                        .padding()
+////                        .background(ColorPalette.secondaryBackground)
+//                        .cornerRadius(8)
+//                        .foregroundColor(ColorPalette.textPrimary)
+//                }
+//
+//                // Notification Picker
+//                Section(header: Text("Notification Alert").foregroundColor(ColorPalette.textPrimary)) {
+//                    Picker("Notify me before", selection: $item.notifyBefore) {
+//                        Text("None").tag(nil as TimeInterval?)
+//                        Text("5 minutes").tag(300 as TimeInterval?)
+//                        Text("15 minutes").tag(900 as TimeInterval?)
+//                        Text("30 minutes").tag(1800 as TimeInterval?)
+//                        Text("1 hour").tag(3600 as TimeInterval?)
+//                    }
+//                    .pickerStyle(MenuPickerStyle())
+////                    .padding()
+////                    .background(ColorPalette.secondaryBackground)
+//                    .cornerRadius(8)
+//                    .foregroundColor(ColorPalette.textPrimary)
+//                }
+//
+//                // Save Changes Button
+//                Section {
+//                    Button("Save Changes") {
+//                        viewModel.updateTask(item: item)
+//                        presentationMode.wrappedValue.dismiss()
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .padding()
+//                    .background(ColorPalette.buttonBackground)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(10)
+//                    .padding([.top, .horizontal])
+//
+//                    Button("Cancel") {
+//                        presentationMode.wrappedValue.dismiss()
+//                    }
+//                    .frame(maxWidth: .infinity)
+//                    .padding()
+//                    .background(ColorPalette.disabledColor)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(10)
+//                    .padding([.bottom, .horizontal])
+//                }
+//
+//
+//                // Cancel Button
+////                Section {
+////                    Button("Cancel") {
+////                        presentationMode.wrappedValue.dismiss()
+////                    }
+////                    .padding()
+////                    .frame(maxWidth: .infinity)
+////                    .background(ColorPalette.disabledColor)
+////                    .foregroundColor(.white)
+////                    .cornerRadius(10)
+////                    .padding([.bottom, .horizontal])
+////                }
+//            }
+//            .background(ColorPalette.primaryBackground.ignoresSafeArea())
+//            .navigationTitle("Edit Task")
+//            .navigationBarTitleDisplayMode(.inline)
+//        }
+//    }
+//}
+
+// Preview
+//#Preview {
+//    EditTaskView(viewModel: ToDoListItemsVM(), item: ToDoListitem(id: UUID(), title: "Sample Task", description: "Task Description", color: "Red", dueDate: Date().timeIntervalSince1970, notifyBefore: 300), presentationMode: .constant(.active))
+//}
+
+
+
 struct EditTaskView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: ToDoListItemsVM
     @State var item: ToDoListitem
-
+    @State private var notificationTime: String = ""
+    
     var body: some View {
         NavigationView {
             Form {
-            
                 Section(header: Text("Title").foregroundColor(ColorPalette.textPrimary)) {
                     TextField("Task Name", text: $item.title)
                         .textFieldStyle(DefaultTextFieldStyle())
-
                 }
-
-                // Description
+                
                 Section(header: Text("Description").foregroundColor(ColorPalette.textPrimary)) {
                     TextField("Task Description", text: Binding(
                         get: { item.description ?? "" },
                         set: { item.description = $0 }
                     ))
-                        .textFieldStyle(DefaultTextFieldStyle())
-//                        .foregroundColor(ColorPalette.textPrimary)
+                    .textFieldStyle(DefaultTextFieldStyle())
                 }
-
-                // Task Color
+                
                 Section(header: Text("Task Color").foregroundColor(ColorPalette.textPrimary)) {
                     Picker("Choose a color", selection: $item.color) {
                         Text("Red").tag("Red")
@@ -661,25 +777,23 @@ struct EditTaskView: View {
                         Text("Default").tag("Default")
                     }
                     .pickerStyle(MenuPickerStyle())
-//                    .padding()
-//                    .background(ColorPalette.secondaryBackground)
                     .cornerRadius(8)
                     .foregroundColor(ColorPalette.textPrimary)
                 }
-
-                // Due Date & Time
+                
                 Section(header: Text("Due Date & Time").foregroundColor(ColorPalette.textPrimary)) {
                     DatePicker("Select Due Date & Time", selection: Binding(
                         get: { Date(timeIntervalSince1970: item.dueDate) },
-                        set: { item.dueDate = $0.timeIntervalSince1970 }
+                        set: { newDueDate in
+                            item.dueDate = newDueDate.timeIntervalSince1970
+                            cancelNotification(taskId: item.id)
+                            scheduleNotificationS(for: item)
+                        }
                     ), displayedComponents: [.date, .hourAndMinute])
-//                        .padding()
-//                        .background(ColorPalette.secondaryBackground)
-                        .cornerRadius(8)
-                        .foregroundColor(ColorPalette.textPrimary)
+                    .cornerRadius(8)
+                    .foregroundColor(ColorPalette.textPrimary)
                 }
-
-                // Notification Picker
+                
                 Section(header: Text("Notification Alert").foregroundColor(ColorPalette.textPrimary)) {
                     Picker("Notify me before", selection: $item.notifyBefore) {
                         Text("None").tag(nil as TimeInterval?)
@@ -689,13 +803,18 @@ struct EditTaskView: View {
                         Text("1 hour").tag(3600 as TimeInterval?)
                     }
                     .pickerStyle(MenuPickerStyle())
-//                    .padding()
-//                    .background(ColorPalette.secondaryBackground)
                     .cornerRadius(8)
                     .foregroundColor(ColorPalette.textPrimary)
                 }
-
-                // Save Changes Button
+                
+                if !notificationTime.isEmpty {
+                    Section(header: Text("Notification Scheduled At").foregroundColor(ColorPalette.textPrimary)) {
+                        Text(notificationTime)
+                            .foregroundColor(ColorPalette.textPrimary)
+                            .padding()
+                    }
+                }
+                
                 Section {
                     Button("Save Changes") {
                         viewModel.updateTask(item: item)
@@ -707,7 +826,7 @@ struct EditTaskView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding([.top, .horizontal])
-
+                    
                     Button("Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }
@@ -718,35 +837,61 @@ struct EditTaskView: View {
                     .cornerRadius(10)
                     .padding([.bottom, .horizontal])
                 }
-
-
-                // Cancel Button
-//                Section {
-//                    Button("Cancel") {
-//                        presentationMode.wrappedValue.dismiss()
-//                    }
-//                    .padding()
-//                    .frame(maxWidth: .infinity)
-//                    .background(ColorPalette.disabledColor)
-//                    .foregroundColor(.white)
-//                    .cornerRadius(10)
-//                    .padding([.bottom, .horizontal])
-//                }
             }
             .background(ColorPalette.primaryBackground.ignoresSafeArea())
             .navigationTitle("Edit Task")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
+    
+    func cancelNotification(taskId: String) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [taskId])
+    }
+    
+    func scheduleNotificationS(for task: ToDoListitem) {
+        guard let notifyBefore = task.notifyBefore else { return }
+        
+        
+        let dueDate = Date(timeIntervalSince1970: task.dueDate)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        let formattedDueDate = dateFormatter.string(from: dueDate)
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Task Reminder"
+        
+        let taskDescription = task.description ?? "No description provided"
+        content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
+       
+        content.sound = .default
+        
+        let triggerDate = Date(timeIntervalSince1970: task.dueDate - notifyBefore)
+        let timeInterval = triggerDate.timeIntervalSinceNow
+        
+        if timeInterval > 0 {
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "h:mm a, MMM dd, yyyy"
+            notificationTime = formatter.string(from: triggerDate)
+            
+            let request = UNNotificationRequest(
+                identifier: task.id,
+                content: content,
+                trigger: trigger
+            )
+            
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("Error scheduling notification: \(error.localizedDescription)")
+                }
+            }
+        } else {
+            print("Notification time interval is not valid. Cannot schedule notification.")
+        }
+    }
 }
-
-// Preview
-//#Preview {
-//    EditTaskView(viewModel: ToDoListItemsVM(), item: ToDoListitem(id: UUID(), title: "Sample Task", description: "Task Description", color: "Red", dueDate: Date().timeIntervalSince1970, notifyBefore: 300), presentationMode: .constant(.active))
-//}
-
-
-
 extension ToDoListItemsVM {
     func getTaskColor(for colorName: String?) -> Color {
         switch colorName {

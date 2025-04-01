@@ -97,96 +97,8 @@
 //        print("Removed notification for task ID: \(taskId)")
 //    }
 //}
-//
 
-
-
-//WORKING
-//import Foundation
-//import UserNotifications
-//
-//class NotificationManager {
-//    static let shared = NotificationManager()
-//
-//    private init() {}
-//
-//    /// Request Notification Permission
-//    func requestPermission() {
-//        let notificationCenter = UNUserNotificationCenter.current()
-//        notificationCenter.getNotificationSettings { settings in
-//            switch settings.authorizationStatus {
-//            case .authorized:
-//                print("Notifications are already authorized.")
-//            case .denied:
-//                print("Notifications are denied.")
-//                return
-//            case .notDetermined:
-//                notificationCenter.requestAuthorization(options: [.alert, .sound]) { didAllow, error in
-//                    if didAllow {
-//                        print("Notifications granted.")
-//                    } else {
-//                        print("Notifications denied.")
-//                    }
-//                }
-//            default:
-//                return
-//            }
-//        }
-//    }
-//
-//    /// Schedule a notification for a task
-//    func scheduleNotification(for task: ToDoListitem) {
-//        guard UserDefaults.standard.bool(forKey: "notificationsEnabled") else {
-//            print("Notifications are disabled. Skipping scheduling.")
-//            return
-//        }
-//
-//        guard let notifyBefore = task.notifyBefore else { return }
-//
-//        let notificationTime = task.dueDate - notifyBefore
-//        if notificationTime < Date().timeIntervalSince1970 {
-//            print("Notification time is in the past. Skipping.")
-//            return
-//        }
-//
-//        let content = UNMutableNotificationContent()
-//        content.title = "Task Reminder"
-//        content.body = "Your task is due: \(task.title)"
-//        content.sound = .default
-//
-//        let triggerDate = Date(timeIntervalSince1970: notificationTime)
-//        let trigger = UNCalendarNotificationTrigger(
-//            dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
-//            repeats: false
-//        )
-//
-//        let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
-//        UNUserNotificationCenter.current().add(request) { error in
-//            if let error = error {
-//                print("Error scheduling notification: \(error.localizedDescription)")
-//            } else {
-//                print("Notification scheduled for \(task.title) at \(triggerDate)")
-//            }
-//        }
-//    }
-//
-//    /// Remove a scheduled notification (if task is deleted or updated)
-//    func removeNotification(for taskId: String) {
-//        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [taskId])
-//        print("Removed notification for task ID: \(taskId)")
-//    }
-//
-//    /// Remove all notifications (when the user disables notifications)
-//    func removeAllNotifications() {
-//        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-//        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-//        print("All notifications removed.")
-//    }
-//}
-
-
-//
-//TESTING
+//TESTING works right now
 import Foundation
 import UserNotifications
 import SwiftUI
@@ -266,58 +178,15 @@ class NotificationManager {
     
         // working and using
     
-//    func scheduleNotification(for task: ToDoListitem) {
-//        guard let notifyBefore = task.notifyBefore else { return }
-//        
-//        let notificationTime = task.dueDate - notifyBefore
-//        if notificationTime < Date().timeIntervalSince1970 {
-//            print("Notification time is in the past. Skipping.")
-//            return
-//        }
-//        
-//        let content = UNMutableNotificationContent()
-//        content.title = "Task Reminder"
-//
-//        let dueDate = Date(timeIntervalSince1970: task.dueDate)
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .medium
-//        dateFormatter.timeStyle = .short
-//        let formattedDueDate = dateFormatter.string(from: dueDate)
-//
-//        let taskDescription = task.description ?? "No description provided"
-//        content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
-//        content.sound = .default
-//
-//        
-//        let triggerDate = Date(timeIntervalSince1970: notificationTime)
-//        let trigger = UNCalendarNotificationTrigger(
-//            dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
-//            repeats: false
-//        )
-//        
-//        let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
-//        UNUserNotificationCenter.current().add(request) { error in
-//            if let error = error {
-//                print("Error scheduling notification: \(error.localizedDescription)")
-//            } else {
-//                print("Notification scheduled for \(task.title) at \(triggerDate)")
-//            }
-//        }
-//    }
-
     func scheduleNotification(for task: ToDoListitem) {
-
-        guard !task.isDeleted, let notifyBefore = task.notifyBefore else {
-            print("Task has been deleted or no notification time is set.")
-            return
-        }
-
+        guard let notifyBefore = task.notifyBefore else { return }
+        
         let notificationTime = task.dueDate - notifyBefore
         if notificationTime < Date().timeIntervalSince1970 {
             print("Notification time is in the past. Skipping.")
             return
         }
-
+        
         let content = UNMutableNotificationContent()
         content.title = "Task Reminder"
 
@@ -331,12 +200,13 @@ class NotificationManager {
         content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
         content.sound = .default
 
+        
         let triggerDate = Date(timeIntervalSince1970: notificationTime)
         let trigger = UNCalendarNotificationTrigger(
             dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
             repeats: false
         )
-
+        
         let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
@@ -346,6 +216,50 @@ class NotificationManager {
             }
         }
     }
+    
+    
+    
+
+//    func scheduleNotification(for task: ToDoListitem) {
+//        guard !task.isDeleted, let notifyBefore = task.notifyBefore else {
+//            print("Task has been deleted or no notification time is set.")
+//            return
+//        }
+//
+//        let notificationTime = task.dueDate - notifyBefore
+//        if notificationTime < Date().timeIntervalSince1970 {
+//            print("Notification time is in the past. Skipping.")
+//            return
+//        }
+//
+//        let content = UNMutableNotificationContent()
+//        content.title = "Task Reminder"
+//
+//        let dueDate = Date(timeIntervalSince1970: task.dueDate)
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = .medium
+//        dateFormatter.timeStyle = .short
+//        let formattedDueDate = dateFormatter.string(from: dueDate)
+//
+//        let taskDescription = task.description ?? "No description provided"
+//        content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
+//        content.sound = .default
+//
+//        let triggerDate = Date(timeIntervalSince1970: notificationTime)
+//        let trigger = UNCalendarNotificationTrigger(
+//            dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
+//            repeats: false
+//        )
+//
+//        let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
+//        UNUserNotificationCenter.current().add(request) { error in
+//            if let error = error {
+//                print("Error scheduling notification: \(error.localizedDescription)")
+//            } else {
+//                print("Notification scheduled for \(task.title) at \(triggerDate)")
+//            }
+//        }
+//    }
 
     
     func removeNotification(for taskId: String) {

@@ -42,17 +42,7 @@ struct ToDoListitem: Codable, Identifiable {
 
 
 
-
-//    mutating func setDone(_ state: Bool) {
-//        isDone = state
-//    }
-//}
-
-//NEED TO ADD DONE, IN PROGRESS,TODOS DB
-//MAYBE NEED TO DO PAGES
 //DESCRIPTION OF MOODLE NEEDS FIXING
-//EDIT TASK NEEDS NOTIFICATION
-//NOTIFACTIONS WORKS (HALF)
-//CALENDER VIEW DESNGING
+//CALENDER VIEW DESNGING THE MOODLE AND REPEAT INTERVAL
 //implemetn accessibility features
 

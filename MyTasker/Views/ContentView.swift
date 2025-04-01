@@ -257,6 +257,9 @@
 //    ContentView()
 //}
 
+
+
+//working right now
 import SwiftUI
 
 struct ContentView: View {
@@ -360,58 +363,6 @@ struct ContentView: View {
         }
     }
 }
-//    var accountView: some View {
-//        NavigationView {
-//            TabView(selection: $selectedTab) {
-//                AfterLoginView(userId: viewModel.currentUserId)
-//                    .tabItem {
-//                        Label("Home", systemImage: "house")
-//                    }
-//                    .tag(0)
-//                
-//                Color.clear // Placeholder view (not visible)
-//                    .tabItem {
-//                        Label("Add", systemImage: "plus")
-//                    }
-//                    .tag(1)
-//                
-//                CalendarView()
-//                    .tabItem {
-//                        Label("Calendar", systemImage: "calendar")
-//                    }
-//                    .tag(2)
-//                
-//                GeminiChatView()
-//                    .tabItem {
-//                        Label("AI Chat", systemImage: "bubble.left.and.bubble.right")
-//                    }
-//                    .tag(3)
-//                
-////                SettingsView()
-////                    .tabItem {
-////                        Label("Settings", systemImage: "gearshape")
-////                    }
-////                    .tag(4)
-//                ImportCalendarView()
-//                    .tabItem {
-//                        Label("Import", systemImage: "arrow.down.doc")
-//                    }
-//                    .tag(4)
-//            }
-////            .navigationTitle("MyTasker")
-//            .navigationBarTitleDisplayMode(.inline)
-//            .onChange(of: selectedTab) {oldTab, newTab in
-//                if newTab == 1 {
-//                    isAddingTask = true
-//                    selectedTab = 0
-//                }
-//            }
-//            .sheet(isPresented: $isAddingTask) {
-//                CreateNewItem(newItemPresented: $isAddingTask)
-//            }
-//        }
-//    }
-//}
 
 // Preview
 #Preview {

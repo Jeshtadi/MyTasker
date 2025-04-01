@@ -1,1086 +1,5 @@
 
-
-
-//import SwiftUI
-//import FirebaseFirestore
-
-
-
-// like this code working
-//import SwiftUI
-//import FirebaseFirestore
-//
-//struct AfterLoginView: View {
-//    @StateObject private var profileVM = ProfileVM()
-//    @FirestoreQuery var items: [ToDoListitem]
-//    
-//    @State private var selectedCategory: String = "todos" // Default to Todos
-//    
-//    init(userId: String) {
-//        self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
-//    }
-//    
-//    // Filtered task categories
-//    var todos: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) <= Date() }
-//    }
-//    
-//    var inProgress: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) > Date() }
-//    }
-//    
-//    var done: [ToDoListitem] {
-//        items.filter { $0.isDone }
-//    }
-//    
-//    // Delete task from Firestore
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//            if let error = error {
-//                print("Error deleting document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully deleted!")
-//            }
-//        }
-//    }
-//    
-//    // Mark task as done
-//    func markTaskAsDone(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).updateData([
-//            "isDone": true
-//        ]) { error in
-//            if let error = error {
-//                print("Error marking task as done: \(error.localizedDescription)")
-//            } else {
-//                print("Task marked as done!")
-//            }
-//        }
-//    }
-//
-//    // Calculate remaining tasks
-//    var remainingTasksCount: Int {
-//        items.filter { !$0.isDone }.count
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("You have \(remainingTasksCount) task\(remainingTasksCount == 1 ? "" : "s") to finish")
-//                    .font(.headline)
-//                    .padding(.top, 10)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                // Category selection buttons
-//                HStack {
-//                    CategoryButton(title: "Todos", icon: "list.dash", isSelected: selectedCategory == "todo") {
-//                        selectedCategory = "todo"
-//                    }
-//                    CategoryButton(title: "In Progress", icon: "arrow.right.circle.fill", isSelected: selectedCategory == "inProgress") {
-//                        selectedCategory = "inProgress"
-//                    }
-//                    CategoryButton(title: "Done", icon: "checkmark.circle.fill", isSelected: selectedCategory == "done") {
-//                        selectedCategory = "done"
-//                    }
-//                }
-//                .padding(.top, 40)
-//                
-//                Text("Your Tasks")
-//                    .font(.title2)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 20)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                List {
-//                    ForEach(selectedCategory == "todo" ? todos :
-//                            selectedCategory == "inProgress" ? inProgress : done) { item in
-//                        ToDoListitems(item: item)
-//                            .swipeActions {
-//                                if selectedCategory != "done" {
-//                                    Button("Mark Done") {
-//                                        markTaskAsDone(taskId: item.id)
-//                                    }
-//                                    .tint(Color.green)
-//                                }
-//                                Button("Delete") {
-//                                    deleteTask(taskId: item.id)
-//                                }
-//                                .tint(Color.red)
-//                            }
-//                    }
-//                }
-//                .listStyle(PlainListStyle())
-//            }
-//            .navigationTitle("Good Morning, \(profileVM.user?.name ?? "User")")
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: Profile()) {
-//                        Image(systemName: "person.circle")
-//                            .font(.title2)
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                    }
-//                }
-//            }
-//            .onAppear {
-//                profileVM.fetchUser()
-//            }
-//        }
-//    }
-//}
-//
-//// Custom Button View for Categories
-//struct CategoryButton: View {
-//    var title: String
-//    var icon: String
-//    var isSelected: Bool
-//    var action: () -> Void
-//
-//    var body: some View {
-//        Button(action: action) {
-//            VStack {
-//                Image(systemName: icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 40, height: 40)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                Text(title)
-//                    .font(.headline)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//            }
-//            .frame(maxWidth: 100, maxHeight: 100)
-//            .padding()
-//            .background(isSelected ? ColorPalette.accentColor : ColorPalette.secondaryBackground)
-//            .cornerRadius(10)
-//        }
-//    }
-//}
-//
-//// Preview
-//struct AfterLoginView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AfterLoginView(userId: "sampleUserId")
-//            .environmentObject(ProfileVM())
-//            .preferredColorScheme(.light)
-//    }
-//}
-
-
-
-//FINAL WORKING CODE
-//
-//import SwiftUI
-//import FirebaseFirestore
-//
-//struct AfterLoginView: View {
-//    @StateObject private var profileVM = ProfileVM()
-//    @FirestoreQuery var items: [ToDoListitem]
-//    
-//    @State private var selectedCategory: String = "todo" // Ensuring "Todos" is the default view
-//
-//    init(userId: String) {
-//        self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
-//    }
-//    
-//    // Filtered task categories
-//    var todos: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) <= Date() }
-//    }
-//    
-//    var inProgress: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) > Date() }
-//    }
-//    
-//    var done: [ToDoListitem] {
-//        items.filter { $0.isDone }
-//    }
-//    
-//    // Delete task from Firestore
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//            if let error = error {
-//                print("Error deleting document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully deleted!")
-//            }
-//        }
-//    }
-//    
-//    // Mark task as done
-//    func markTaskAsDone(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).updateData([
-//            "isDone": true
-//        ]) { error in
-//            if let error = error {
-//                print("Error marking task as done: \(error.localizedDescription)")
-//            } else {
-//                print("Task marked as done!")
-//            }
-//        }
-//    }
-//
-//    // Calculate remaining tasks
-//    var remainingTasksCount: Int {
-//        items.filter { !$0.isDone }.count
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("You have \(remainingTasksCount) task\(remainingTasksCount == 1 ? "" : "s") to finish")
-//                    .font(.headline)
-//                    .padding(.top, 10)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//                HStack {
-//                    CategoryButton(title: "Todos", icon: "list.dash", isSelected: selectedCategory == "todo") {
-//                        selectedCategory = "todo"
-//                    }
-//                    .frame(width: 100, height: 50) // Set width and height for the button
-//                    .padding(.horizontal, 10) // Add horizontal padding for spacing between buttons
-//
-//                    CategoryButton(title: "In Progress", icon: "arrow.right.circle.fill", isSelected: selectedCategory == "inProgress") {
-//                        selectedCategory = "inProgress"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "Done", icon: "checkmark.circle.fill", isSelected: selectedCategory == "done") {
-//                        selectedCategory = "done"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//                }
-//                .padding(.top, 40) // Adjust the top padding for the entire HStack
-//                .frame(maxWidth: .infinity, alignment: .center) // Make the HStack stretch across the screen, centered
-//
-//                
-//                Text("Your Tasks")
-//                    .font(.title2)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 20)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                List {
-//                    ForEach(selectedCategory == "todo" ? todos :
-//                            selectedCategory == "inProgress" ? inProgress : done) { item in
-//                        ToDoListitems(item: item)
-//                            .foregroundColor(Color.black)
-//                            .swipeActions {
-//                                if selectedCategory != "done" {
-//                                    Button("Mark Done") {
-//                                        markTaskAsDone(taskId: item.id)
-//                                    }
-//                                    .tint(Color.green)
-//                                }
-//                                Button("Delete") {
-//                                    deleteTask(taskId: item.id)
-//                                }
-//                                .tint(Color.red)
-//                            }
-//                    }
-//                }
-//                .listStyle(PlainListStyle())
-//            }
-//            .navigationTitle("Good Morning, \(profileVM.user?.name ?? "User")")
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: Profile()) {
-//                        Image(systemName: "person.circle")
-//                            .font(.title2)
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                    }
-//                }
-//            }
-//            .onAppear {
-//                profileVM.fetchUser()
-//                selectedCategory = "todo" // Ensures "Todos" is always selected when the view appears
-//            }
-//        }
-//    }
-//}
-//
-//// Custom Button View for Categories
-//struct CategoryButton: View {
-//    var title: String
-//    var icon: String
-//    var isSelected: Bool
-//    var action: () -> Void
-//
-//    var body: some View {
-//        Button(action: action) {
-//            VStack {
-//                Image(systemName: icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 40, height: 40)
-//                    .foregroundColor(isSelected ? Color.black : ColorPalette.textPrimary)
-//                Text(title)
-//                    .font(.headline)
-//                    .foregroundColor(isSelected ? Color.black : ColorPalette.textPrimary)
-//            }
-//            .frame(maxWidth: 100, maxHeight: 100)
-//            .padding()
-//            .background(isSelected ? ColorPalette.accentColor : ColorPalette.secondaryBackground)
-//            .cornerRadius(10)
-//        }
-//    }
-//}
-//
-//// Preview
-//struct AfterLoginView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AfterLoginView(userId: "sampleUserId")
-//            .environmentObject(ProfileVM())
-//            .preferredColorScheme(.light)
-//    }
-//}
-
-
-
-
-
-//import SwiftUI
-//import FirebaseFirestore
-//import FirebaseAuth
-//struct AfterLoginView: View {
-//    @StateObject private var profileVM = ProfileVM()
-//    @FirestoreQuery var items: [ToDoListitem]
-//    @State private var selectedCategory: String = "todo" // Ensuring "Todos" is the default view
-//    @State private var showEditTaskSheet: Bool = false
-//    @State private var taskToEdit: ToDoListitem?
-//
-//    @ObservedObject var toDoListItemsVM = ToDoListItemsVM() // ViewModel for updating task
-//
-//    init(userId: String) {
-//        self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
-//    }
-//    
-//    // Filtered task categories
-//    var todos: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) <= Date() }
-//    }
-//    
-//    var inProgress: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) > Date() }
-//    }
-//    
-//    var done: [ToDoListitem] {
-//        items.filter { $0.isDone }
-//    }
-//    
-//    // Delete task from Firestore
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//            if let error = error {
-//                print("Error deleting document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully deleted!")
-//            }
-//        }
-//    }
-//
-//    // Calculate remaining tasks
-//    var remainingTasksCount: Int {
-//        items.filter { !$0.isDone }.count
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("You have \(remainingTasksCount) task\(remainingTasksCount == 1 ? "" : "s") to finish")
-//                    .font(.headline)
-//                    .padding(.top, 10)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//                
-//                HStack {
-//                    CategoryButton(title: "Todos", icon: "list.dash", isSelected: selectedCategory == "todo") {
-//                        selectedCategory = "todo"
-//                    }
-//                    .frame(width: 100, height: 50) // Set width and height for the button
-//                    .padding(.horizontal, 10) // Add horizontal padding for spacing between buttons
-//
-//                    CategoryButton(title: "In Progress", icon: "arrow.right.circle.fill", isSelected: selectedCategory == "inProgress") {
-//                        selectedCategory = "inProgress"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "Done", icon: "checkmark.circle.fill", isSelected: selectedCategory == "done") {
-//                        selectedCategory = "done"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//                }
-//                .padding(.top, 40) // Adjust the top padding for the entire HStack
-//                .frame(maxWidth: .infinity, alignment: .center) // Make the HStack stretch across the screen, centered
-//
-//                Text("Your Tasks")
-//                    .font(.title2)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 20)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                List {
-//                    ForEach(selectedCategory == "todo" ? todos :
-//                            selectedCategory == "inProgress" ? inProgress : done) { item in
-//                        VStack(alignment: .leading) {
-//                            // Edit button at the top of each task
-//                            Button("Edit") {
-//                                taskToEdit = item
-//                                showEditTaskSheet = true
-//                            }
-//                            .padding(.top, 10)
-//                            .foregroundColor(Color.blue)
-//
-//                            ToDoListitems(item: item)
-//                                Button("Edit") {
-//                                    taskToEdit = item
-//                                    showEditTaskSheet = true
-//                                }
-//                                .padding(.top, 10)
-//                                .foregroundColor(Color.blue)
-//                                .foregroundColor(Color.black)
-//                                .swipeActions {
-//                                    Button("Delete") {
-//                                        deleteTask(taskId: item.id)
-//                                    }
-//                                    .tint(Color.red)
-//                                }
-//                        }
-//                    }
-//                }
-//                .listStyle(PlainListStyle())
-//            }
-//            .navigationTitle("Good Morning, \(profileVM.user?.name ?? "User")")
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: Profile()) {
-//                        Image(systemName: "person.circle")
-//                            .font(.title2)
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                    }
-//                }
-//            }
-//            .onAppear {
-//                profileVM.fetchUser()
-//                selectedCategory = "todo" // Ensures "Todos" is always selected when the view appears
-//            }
-//            .sheet(isPresented: $showEditTaskSheet) {
-//                if let taskToEdit = taskToEdit {
-//                    EditTaskSheet(viewModel: toDoListItemsVM, task: taskToEdit)
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//struct CategoryButton: View {
-//    var title: String
-//    var icon: String
-//    var isSelected: Bool
-//    var action: () -> Void
-//
-//    var body: some View {
-//        Button(action: action) {
-//            VStack {
-//                Image(systemName: icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 40, height: 40)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                Text(title)
-//                    .font(.headline)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//            }
-//            .frame(maxWidth: 100, maxHeight: 100)
-//            .padding()
-//            .background(isSelected ? ColorPalette.accentColor : ColorPalette.secondaryBackground)
-//            .cornerRadius(10)
-//        }
-//    }
-//}
-//
-//// Bottom sheet for editing task
-//struct EditTaskSheet: View {
-//    @Environment(\.presentationMode) var presentationMode
-//    @ObservedObject var viewModel: ToDoListItemsVM
-//    @State var task: ToDoListitem
-//
-//    var body: some View {
-//        VStack {
-//            Text("Edit Task")
-//                .font(.title)
-//                .fontWeight(.bold)
-//                .padding()
-//
-//            TextField("Task Name", text: $task.title)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding()
-//
-//            DatePicker("Due Date", selection: Binding(
-//                get: { Date(timeIntervalSince1970: task.dueDate) },
-//                set: { task.dueDate = $0.timeIntervalSince1970 }
-//            ), displayedComponents: .date)
-//                .padding()
-//
-//            Button("Save Changes") {
-//                viewModel.updateTask(item: task)
-//                presentationMode.wrappedValue.dismiss()
-//            }
-//            .padding()
-//            .frame(maxWidth: .infinity)
-//            .background(Color.blue)
-//            .foregroundColor(.white)
-//            .cornerRadius(10)
-//            .padding()
-//        }
-//        .padding()
-//    }
-//}
-
-//import SwiftUI
-//import FirebaseFirestore
-//import FirebaseAuth
-//
-//struct AfterLoginView: View {
-//    @StateObject private var profileVM = ProfileVM()
-//    @FirestoreQuery var items: [ToDoListitem]
-//    @State private var selectedCategory: String = "todo"
-//    
-//    @StateObject var viewModel = ToDoListItemsVM()
-//    @ObservedObject var toDoListItemsVM = ToDoListItemsVM() // ViewModel for updating task
-//
-//    init(userId: String) {
-//        self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
-//    }
-//
-//    // Filtered task categories
-//    var todos: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) <= Date() }
-//    }
-//
-//    var inProgress: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) > Date() }
-//    }
-//
-//    var done: [ToDoListitem] {
-//        items.filter { $0.isDone }
-//    }
-//
-//    // Delete task from Firestore
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//            if let error = error {
-//                print("Error deleting document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully deleted!")
-//            }
-//        }
-//    }
-//
-//    // Calculate remaining tasks
-//    var remainingTasksCount: Int {
-//        items.filter { !$0.isDone }.count
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("Good Morning, \(profileVM.user?.name ?? "User")")
-//                    .font(.largeTitle)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 20)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                
-//                Text("You have \(remainingTasksCount) task\(remainingTasksCount == 1 ? "" : "s") to finish")
-//                    .font(.headline)
-//                    .padding(.top, 10)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                HStack {
-//                    CategoryButton(title: "Todos", icon: "list.dash", isSelected: selectedCategory == "todo") {
-//                        selectedCategory = "todo"
-//                    }
-//                    .frame(width: 100, height: 50) // Set width and height for the button
-//                    .padding(.horizontal, 10) // Add horizontal padding for spacing between buttons
-//
-//                    CategoryButton(title: "In Progress", icon: "arrow.right.circle.fill", isSelected: selectedCategory == "inProgress") {
-//                        selectedCategory = "inProgress"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "Done", icon: "checkmark.circle.fill", isSelected: selectedCategory == "done") {
-//                        selectedCategory = "done"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//                }
-//                .padding(.top, 40) // Adjust the top padding for the entire HStack
-//                .frame(maxWidth: .infinity, alignment: .center) // Make the HStack stretch across the screen, centered
-//
-//                Text("Your Tasks")
-//                    .font(.title2)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 50)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                List {
-//                    ForEach(selectedCategory == "todo" ? todos :
-//                            selectedCategory == "inProgress" ? inProgress : done) { item in
-//                        VStack(alignment: .leading) {
-//                            // Task content - No edit button anymore
-//                            ToDoListitems(viewModel: viewModel, item: item) // Pass viewModel explicitly
-//
-//                                .swipeActions {
-//                                    Button("Delete") {
-//                                        deleteTask(taskId: item.id)
-//                                    }
-//                                    .tint(Color.red)
-//                                }
-//                        }
-//                    }
-//                }
-//                .listStyle(PlainListStyle())
-//
-//            }
-////            .navigationTitle("Good Morning, \(profileVM.user?.name ?? "User")")
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: Profile(items: _items)) {
-//                        Image(systemName: "person.circle")
-//                            .font(.title2)
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                    }
-//                }
-//            }
-//            .onAppear {
-//                profileVM.fetchUser()
-//                selectedCategory = "todo" // Ensures "Todos" is always selected when the view appears
-//            }
-//        }
-//    }
-//}
-//
-//struct CategoryButton: View {
-//    var title: String
-//    var icon: String
-//    var isSelected: Bool
-//    var action: () -> Void
-//
-//    var body: some View {
-//        Button(action: action) {
-//            VStack {
-//                Image(systemName: icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 30, height: 30) // Adjusted size
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                Text(title)
-//                    .font(.system(size: 14)) // Adjusted font size
-//                    .fontWeight(.medium)
-//                    .multilineTextAlignment(.center)
-//                    .lineLimit(1) // Ensures text remains within bounds
-//                    .minimumScaleFactor(0.8) // Allows text to shrink slightly if needed
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                    .padding(.horizontal, 4)
-//            }
-//            .frame(width: 110, height: 70) // Increased width to fit text
-//            .padding(6)
-//            .background(isSelected ? ColorPalette.accentColor : ColorPalette.secondaryBackground)
-//            .cornerRadius(10)
-//        }
-//    }
-//}
-//
-
-
-
-// notification
-//import SwiftUI
-//import FirebaseFirestore
-//import FirebaseAuth
-//import UserNotifications // Import UserNotifications for notification handling
-//
-//struct AfterLoginView: View {
-//    @StateObject private var profileVM = ProfileVM()
-//    @FirestoreQuery var items: [ToDoListitem]
-//    @State private var selectedCategory: String = "todo"
-//    
-//    @StateObject var viewModel = ToDoListItemsVM()
-//    @ObservedObject var toDoListItemsVM = ToDoListItemsVM() // ViewModel for updating task
-//
-//    init(userId: String) {
-//        self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
-//    }
-//
-//    // Filtered task categories
-//    var todos: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) <= Date() }
-//    }
-//
-//    var inProgress: [ToDoListitem] {
-//        items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) > Date() }
-//    }
-//
-//    var done: [ToDoListitem] {
-//        items.filter { $0.isDone }
-//    }
-//
-//    // Delete task from Firestore
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//            if let error = error {
-//                print("Error deleting document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully deleted!")
-//            }
-//        }
-//    }
-//
-//    // Calculate remaining tasks
-//    var remainingTasksCount: Int {
-//        items.filter { !$0.isDone }.count
-//    }
-//
-//    // Request notification permission
-//    func requestNotificationPermission() {
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-//            if granted {
-//                print("Notification permission granted.")
-//            } else {
-//                print("Notification permission denied.")
-//            }
-//        }
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("Good Morning, \(profileVM.user?.name ?? "User")")
-//                    .font(.largeTitle)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 20)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                Text("You have \(remainingTasksCount) task\(remainingTasksCount == 1 ? "" : "s") to finish")
-//                    .font(.headline)
-//                    .padding(.top, 10)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                HStack {
-//                    CategoryButton(title: "Todos", icon: "list.dash", isSelected: selectedCategory == "todo") {
-//                        selectedCategory = "todo"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "In Progress", icon: "arrow.right.circle.fill", isSelected: selectedCategory == "inProgress") {
-//                        selectedCategory = "inProgress"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "Done", icon: "checkmark.circle.fill", isSelected: selectedCategory == "done") {
-//                        selectedCategory = "done"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//                }
-//                .padding(.top, 40)
-//                .frame(maxWidth: .infinity, alignment: .center)
-//
-//                Text("Your Tasks")
-//                    .font(.title2)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 50)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                List {
-//                    ForEach(selectedCategory == "todo" ? todos :
-//                            selectedCategory == "inProgress" ? inProgress : done) { item in
-//                        VStack(alignment: .leading) {
-//                            ToDoListitems(viewModel: viewModel, item: item)
-//                                .swipeActions {
-//                                    Button("Delete") {
-//                                        deleteTask(taskId: item.id)
-//                                    }
-//                                    .tint(Color.red)
-//                                }
-//                        }
-//                    }
-//                }
-//                .listStyle(PlainListStyle())
-//            }
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: Profile(items: _items)) {
-//                        Image(systemName: "person.circle")
-//                            .font(.title2)
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                    }
-//                }
-//            }
-//            .onAppear {
-//                profileVM.fetchUser()
-//                selectedCategory = "todo"
-//                requestNotificationPermission() // Ask for notification permission when the view appears
-//            }
-//        }
-//    }
-//}
-//
-//struct CategoryButton: View {
-//    var title: String
-//    var icon: String
-//    var isSelected: Bool
-//    var action: () -> Void
-//
-//    var body: some View {
-//        Button(action: action) {
-//            VStack {
-//                Image(systemName: icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 30, height: 30)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                Text(title)
-//                    .font(.system(size: 14))
-//                    .fontWeight(.medium)
-//                    .multilineTextAlignment(.center)
-//                    .lineLimit(1)
-//                    .minimumScaleFactor(0.8)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                    .padding(.horizontal, 4)
-//            }
-//            .frame(width: 110, height: 70)
-//            .padding(6)
-//            .background(isSelected ? ColorPalette.accentColor : ColorPalette.secondaryBackground)
-//            .cornerRadius(10)
-//        }
-//    }
-//}
-
-
-
-
-
-// FINALL WORKING CODE
-//import SwiftUI
-//import FirebaseFirestore
-//import FirebaseAuth
-//import UserNotifications
-//
-//struct AfterLoginView: View {
-//    @StateObject private var profileVM = ProfileVM()
-//    @FirestoreQuery var items: [ToDoListitem]
-//    @State private var selectedCategory: String = "todo"
-//    
-//    @StateObject var viewModel = ToDoListItemsVM()
-//    @ObservedObject var toDoListItemsVM = ToDoListItemsVM() // ViewModel for updating task
-//    init(userId: String) {
-//        self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
-//    }
-//
-//    
-//    var todos: [ToDoListitem] {
-//        let todayStart = Calendar.current.startOfDay(for: Date()) // Midnight today
-//        let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: todayStart)! // Midnight tomorrow
-//
-//        return items.filter { !$0.isDone &&
-//            Date(timeIntervalSince1970: $0.dueDate) >= todayStart &&
-//            Date(timeIntervalSince1970: $0.dueDate) < todayEnd
-//        }
-//    }
-//    
-//    var inProgress: [ToDoListitem] {
-//        let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
-//
-//        return items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) >= todayEnd }
-//    }
-//
-//    var done: [ToDoListitem] {
-//        items.filter { $0.isDone }
-//    }
-//
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//            if let error = error {
-//                print("Error deleting document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully deleted!")
-//            }
-//        }
-//    }
-//    
-//   
-//
-//    // Calculate remaining tasks
-//    var remainingTasksCount: Int {
-//        items.filter { !$0.isDone }.count
-//    }
-//
-//    func requestNotificationPermission() {
-//        let center = UNUserNotificationCenter.current()
-//        center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-//            if granted {
-//                print("Notification permission granted.")
-//            } else {
-//                print("Notification permission denied.")
-//            }
-//        }
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("Good Morning, \(profileVM.user?.name ?? "User")")
-//                    .font(.largeTitle)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 20)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                Text("You have \(remainingTasksCount) task\(remainingTasksCount == 1 ? "" : "s") to finish")
-//                    .font(.headline)
-//                    .padding(.top, 10)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                HStack {
-//                    CategoryButton(title: "Todos", icon: "list.dash", isSelected: selectedCategory == "todo") {
-//                        selectedCategory = "todo"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "In Progress", icon: "arrow.right.circle.fill", isSelected: selectedCategory == "inProgress") {
-//                        selectedCategory = "inProgress"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//
-//                    CategoryButton(title: "Done", icon: "checkmark.circle.fill", isSelected: selectedCategory == "done") {
-//                        selectedCategory = "done"
-//                    }
-//                    .frame(width: 100, height: 50)
-//                    .padding(.horizontal, 10)
-//                }
-//                .padding(.top, 40)
-//                .frame(maxWidth: .infinity, alignment: .center)
-//
-//                Text("Your Tasks")
-//                    .font(.title2)
-//                    .fontWeight(.bold)
-//                    .padding(.top, 50)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.horizontal)
-//                    .foregroundColor(ColorPalette.textPrimary)
-//
-//                List {
-//                    ForEach(selectedCategory == "todo" ? todos :
-//                            selectedCategory == "inProgress" ? inProgress : done) { item in
-//                        VStack(alignment: .leading) {
-//                            ToDoListitems(viewModel: viewModel, item: item)
-//
-//                            .swipeActions {
-//                                Button("Delete") {
-//                                    deleteTask(taskId: item.id)
-//                                }
-//                                .tint(Color.red)
-//                            }
-//                        }
-//                    }
-//                }
-//                .listStyle(PlainListStyle())
-//            }
-//            
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: Profile(items: _items)) {
-//                        Image(systemName: "person.circle")
-//                            .font(.title2)
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                                }
-//                            }
-//                        }
-//            .onAppear {
-//                profileVM.fetchUser()
-//                selectedCategory = "todo"
-//                requestNotificationPermission() // Request permission when the view appears
-//            }
-//        }
-//    }
-//}
-
-//struct CategoryButton: View {
-//    var title: String
-//    var icon: String
-//    var isSelected: Bool
-//    var action: () -> Void
-//
-//    var body: some View {
-//        Button(action: action) {
-//            VStack {
-//                Image(systemName: icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 30, height: 30)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                Text(title)
-//                    .font(.system(size: 14))
-//                    .fontWeight(.medium)
-//                    .multilineTextAlignment(.center)
-//                    .lineLimit(1)
-//                    .minimumScaleFactor(0.8)
-//                    .foregroundColor(isSelected ? Color.white : ColorPalette.textPrimary)
-//                    .padding(.horizontal, 4)
-//            }
-//            .frame(width: 110, height: 70)
-//            .padding(6)
-//            .background(isSelected ? ColorPalette.accentColor : ColorPalette.secondaryBackground)
-//            .cornerRadius(10)
-//        }
-//    }
-//}
-
-
-
-
-///TESTING NOTIFICATION
+///TESTING NOTIFICATION working now
 import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
@@ -1094,11 +13,15 @@ struct AfterLoginView: View {
     @StateObject var viewModel = ToDoListItemsVM()
     @ObservedObject var toDoListItemsVM = ToDoListItemsVM()
     @State private var showNotificationAlert = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var recentlyDeletedTasks: [ToDoListitem] = []
+
     
     init(userId: String) {
         self._items = FirestoreQuery(collectionPath: "users/\(userId)/todos")
     }
-
+    
     // Your task categories
     var todos: [ToDoListitem] {
         let todayStart = Calendar.current.startOfDay(for: Date())
@@ -1110,28 +33,95 @@ struct AfterLoginView: View {
         let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
         return items.filter { !$0.isDone && Date(timeIntervalSince1970: $0.dueDate) >= todayEnd }
     }
-
+    
     var done: [ToDoListitem] {
         items.filter { $0.isDone }
     }
+    
+    
+    //testing
+//    func deleteTask(taskId: String) {
+//        let db = Firestore.firestore()
+//        let taskRef = db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId)
+//        
+//        // Update the task to set isDELETED to true
+//        taskRef.updateData(["isDeleted": true]) { error in
+//            if let error = error {
+//                print("Error updating document: \(error.localizedDescription)")
+//            } else {
+//                print("Document successfully marked as deleted!")
+//            }
+//        }
+//    }
 
-    // Function to delete task
+//    func deleteTask(taskId: String) {
+//        let db = Firestore.firestore()
+//        let taskRef = db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId)
+//        
+//        taskRef.updateData(["isDeleted": true]) { error in
+//            if let error = error {
+//                print("Error updating document: \(error.localizedDescription)")
+//            } else {
+//                print("Task marked as deleted successfully.")
+//                
+//                taskRef.delete { error in
+//                    if let error = error {
+//                        print("Error deleting document from todos: \(error.localizedDescription)")
+//                    } else {
+//                        print("Task successfully deleted from todos collection!")
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+  
+
     func deleteTask(taskId: String) {
         let db = Firestore.firestore()
-        db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
+        let taskRef = db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId)
+         
+        taskRef.updateData(["isDeleted": true]) { error in
             if let error = error {
-                print("Error deleting document: \(error.localizedDescription)")
+                print("Error updating document: \(error.localizedDescription)")
             } else {
-                print("Document successfully deleted!")
+                print("Task marked as deleted successfully.")
+                 
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [taskId])
+                print("Notification canceled for the task.")
+                 
+                taskRef.delete { error in
+                    if let error = error {
+                        print("Error deleting document from todos: \(error.localizedDescription)")
+                    } else {
+                        print("Task successfully deleted from todos collection!")
+                    }
+                }
             }
         }
     }
 
+    
+    
+    // Function to delete task works and using
+//        func deleteTask(taskId: String) {
+//            let db = Firestore.firestore()
+//            db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
+//                if let error = error {
+//                    print("Error deleting document: \(error.localizedDescription)")
+//                } else {
+//                    print("Document successfully deleted!")
+//                }
+//            }
+//        }
+    
+    
+    
     // Calculate remaining tasks count
     var remainingTasksCount: Int {
         items.filter { !$0.isDone }.count
     }
-
+    
     // Request notification permission using NotificationManager
     func requestNotificationPermission() {
         NotificationManager.shared.requestPermission { granted in
@@ -1142,17 +132,6 @@ struct AfterLoginView: View {
             }
         }
     }
-    
-//    func requestNotificationPermission() {
-//        NotificationManager.shared.requestPermission { granted in
-//            if !granted {
-//                NotificationManager.shared.removeAllNotifications()
-//                showNotificationAlert = true
-//            }
-//        }
-//    }
-
-    
     
     
     var body: some View {
@@ -1212,48 +191,53 @@ struct AfterLoginView: View {
                                 .swipeActions {
                                     Button("Delete") {
                                         deleteTask(taskId: item.id)
+                                            self.alertMessage = "Your task has been moved to Recently Deleted"
+                                            self.showAlert = true
+                                        }
+                            
                                     }
                                     .tint(Color.red)
                                 }
                         }
+                        .alert(isPresented: $showAlert) {
+                            Alert(title: Text("Task Deleted"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                        }
+                    }
+                                .listStyle(PlainListStyle())
+                }
+                
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: Profile(items: _items)) {
+                            Image(systemName: "person.circle")
+                                .font(.title2)
+                                .foregroundColor(ColorPalette.textPrimary)
+                        }
                     }
                 }
-                .listStyle(PlainListStyle())
-            }
-            
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: Profile(items: _items)) {
-                        Image(systemName: "person.circle")
-                            .font(.title2)
-                            .foregroundColor(ColorPalette.textPrimary)
-                    }
+                .onAppear {
+                    profileVM.fetchUser()
+                    selectedCategory = "todo"
+                    requestNotificationPermission() // Now using NotificationManager
+                    
                 }
-            }
-            .onAppear {
-                profileVM.fetchUser()
-                selectedCategory = "todo"
-                requestNotificationPermission() // Now using NotificationManager
+                .alert(isPresented: $showNotificationAlert) {
+                    Alert(
+                        title: Text("Enable Notifications"),
+                        message: Text("Notifications are disabled. Please enable them in Settings."),
+                        primaryButton: .default(Text("Open Settings"), action: {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        }),
+                        secondaryButton: .cancel()
+                    )
+                }
+                
                 
             }
-            .alert(isPresented: $showNotificationAlert) {
-                Alert(
-                    title: Text("Enable Notifications"),
-                    message: Text("Notifications are disabled. Please enable them in Settings."),
-                    primaryButton: .default(Text("Open Settings"), action: {
-                        if let url = URL(string: UIApplication.openSettingsURLString) {
-                            UIApplication.shared.open(url)
-                        }
-                    }),
-                    secondaryButton: .cancel()
-                )
-            }
-
-        
         }
     }
-}
-
 
 
 struct CategoryButton: View {

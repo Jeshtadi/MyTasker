@@ -53,41 +53,8 @@ struct MoodleEvent: Codable, Identifiable {
     var title: String
     var startDate: TimeInterval
     var endDate: TimeInterval
-    var description: String 
+    var description: String
     var notifyBefore: TimeInterval?
     var color: String = "#FFA500"
     
-    
-//    private func cleanDescription(_ description: String) -> String {
-//        var cleanedDescription = description
-//        
-//        
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: "")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "  +", with: " ", options: .regularExpression)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n([a-z])", with: " $1", options: .regularExpression)
-//        
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n\t* ", with: "\n• ", options: .regularExpression)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n- ", with: "\n• ", options: .regularExpression)
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//        
-//        return cleanedDescription
-//    }
-//    
-//    
-//    func attributedDescription() -> NSAttributedString {
-//        let cleanedText = cleanDescription(description)
-//        let data = cleanedText.data(using: .utf8)!
-//        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-//            .documentType: NSAttributedString.DocumentType.plain,
-//            .characterEncoding: String.Encoding.utf8.rawValue
-//        ]
-//        
-//        let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil)
-//        return attributedString ?? NSAttributedString(string: cleanedText)
-//    }
 }
