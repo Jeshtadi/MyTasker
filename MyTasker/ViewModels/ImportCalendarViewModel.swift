@@ -526,30 +526,86 @@
 
 //working on right now but description is off
 
-import SwiftUI
-import FirebaseAuth
-import FirebaseFirestore
-
-class ImportCalendarViewModel: ObservableObject {
-
-    @Published var events: [MoodleEvent] = []
-    @Published var moodleURL: String = ""
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String? = nil
-    @Published var isImportComplete: Bool = false  // Added to control navigation
-    
-    private let db = Firestore.firestore()
-
-    init() {
-        loadEventsFromFirestore()
-    }
-
+//import SwiftUI
+//import FirebaseAuth
+//import FirebaseFirestore
+//
+//class ImportCalendarViewModel: ObservableObject {
+//
+//    @Published var events: [MoodleEvent] = []
+//    @Published var moodleURL: String = ""
+//    @Published var isLoading: Bool = false
+//    @Published var errorMessage: String? = nil
+//    @Published var isImportComplete: Bool = false  // Added to control navigation
+//    
+//    private let db = Firestore.firestore()
+//
+//    init() {
+//        loadEventsFromFirestore()
+//    }
+//
+////    func importCalendar(completion: @escaping (String?) -> Void) {
+////        let trimmedURL = moodleURL.trimmingCharacters(in: .whitespacesAndNewlines)
+////
+////        guard !trimmedURL.isEmpty, let url = URL(string: trimmedURL) else {
+////            self.errorMessage = "Invalid Moodle Calendar URL."
+////            completion("Invalid Moodle Calendar URL.") // Returning error message through completion
+////            return
+////        }
+////
+////        isLoading = true
+////        errorMessage = nil
+////
+////        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+////            guard let self = self else { return }
+////
+////            if let error = error {
+////                DispatchQueue.main.async {
+////                    self.isLoading = false
+////                    self.errorMessage = "Error fetching .ics file: \(error.localizedDescription)"
+////                    completion(self.errorMessage) // Return error through completion
+////                }
+////                return
+////            }
+////
+////            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+////                DispatchQueue.main.async {
+////                    self.isLoading = false
+////                    self.errorMessage = "Server returned status code \(httpResponse.statusCode). Please check the URL."
+////                    completion(self.errorMessage) // Return error through completion
+////                }
+////                return
+////            }
+////
+////            if let data = data, let icsString = String(data: data, encoding: .utf8) {
+////                let parsedEvents = self.parseICS(icsString)
+////
+////                DispatchQueue.main.async {
+////                    self.events = parsedEvents
+////                    self.saveEventsToFirestore(events: parsedEvents)
+////                    self.isLoading = false
+////                    self.isImportComplete = true  // Trigger navigation
+////                    completion(nil) // Return success (nil indicates no error)
+////                }
+////            } else {
+////                DispatchQueue.main.async {
+////                    self.isLoading = false
+////                    self.errorMessage = "Failed to load calendar data. Please check your URL."
+////                    completion(self.errorMessage) // Return error through completion
+////                }
+////            }
+////        }
+////        task.resume()
+////    }
+//
+//    
+//    
 //    func importCalendar(completion: @escaping (String?) -> Void) {
 //        let trimmedURL = moodleURL.trimmingCharacters(in: .whitespacesAndNewlines)
 //
 //        guard !trimmedURL.isEmpty, let url = URL(string: trimmedURL) else {
 //            self.errorMessage = "Invalid Moodle Calendar URL."
-//            completion("Invalid Moodle Calendar URL.") // Returning error message through completion
+//            completion("Invalid Moodle Calendar URL.")
 //            return
 //        }
 //
@@ -563,7 +619,7 @@ class ImportCalendarViewModel: ObservableObject {
 //                DispatchQueue.main.async {
 //                    self.isLoading = false
 //                    self.errorMessage = "Error fetching .ics file: \(error.localizedDescription)"
-//                    completion(self.errorMessage) // Return error through completion
+//                    completion(self.errorMessage)
 //                }
 //                return
 //            }
@@ -572,7 +628,7 @@ class ImportCalendarViewModel: ObservableObject {
 //                DispatchQueue.main.async {
 //                    self.isLoading = false
 //                    self.errorMessage = "Server returned status code \(httpResponse.statusCode). Please check the URL."
-//                    completion(self.errorMessage) // Return error through completion
+//                    completion(self.errorMessage)
 //                }
 //                return
 //            }
@@ -582,39 +638,253 @@ class ImportCalendarViewModel: ObservableObject {
 //
 //                DispatchQueue.main.async {
 //                    self.events = parsedEvents
-//                    self.saveEventsToFirestore(events: parsedEvents)
+//                    self.saveEventsToFirestore(events: parsedEvents) {
+//                        self.loadEventsFromFirestore()  // Refresh the view after import
+//                    }
 //                    self.isLoading = false
-//                    self.isImportComplete = true  // Trigger navigation
-//                    completion(nil) // Return success (nil indicates no error)
+//                    self.isImportComplete = true
+//                    completion(nil)
 //                }
 //            } else {
 //                DispatchQueue.main.async {
 //                    self.isLoading = false
 //                    self.errorMessage = "Failed to load calendar data. Please check your URL."
-//                    completion(self.errorMessage) // Return error through completion
+//                    completion(self.errorMessage)
 //                }
 //            }
 //        }
 //        task.resume()
 //    }
+//
+////using
+//    private func parseICS(_ icsString: String) -> [MoodleEvent] {
+//        let lines = icsString.components(separatedBy: "\n")
+//        var event: [String: String] = [:]
+//        var events: [MoodleEvent] = []
+//        var currentDescription = ""
+//        var isCollectingDescription = false
+//
+//        for line in lines {
+//            if line.hasPrefix("BEGIN:VEVENT") {
+//                event = [:]
+//                currentDescription = ""
+//                isCollectingDescription = false
+//            } else if line.hasPrefix("END:VEVENT") {
+//                if let id = event["UID"],
+//                   let title = event["SUMMARY"],
+//                   let startDateStr = event["DTSTART"],
+//                   let endDateStr = event["DTEND"],
+//                   let startDate = parseDate(startDateStr),
+//                   let endDate = parseDate(endDateStr) {
+//                    
+//                    // Create event with raw description first
+//                    let moodleEvent = MoodleEvent(
+//                        id: id,
+//                        title: title,
+//                        startDate: startDate.timeIntervalSince1970,
+//                        endDate: endDate.timeIntervalSince1970,
+//                        description: currentDescription.isEmpty ? "No description" : currentDescription,
+//                        notifyBefore: nil
+//                    )
+//
+//                    // Clean and format description
+//                    let attributedDescription = self.cleanDescription(moodleEvent.description)
+//
+//                    // Create a new MoodleEvent with the cleaned description
+//                    let finalEvent = MoodleEvent(
+//                        id: moodleEvent.id,
+//                        title: moodleEvent.title,
+//                        startDate: moodleEvent.startDate,
+//                        endDate: moodleEvent.endDate,
+//                        description: attributedDescription,
+//                        notifyBefore: moodleEvent.notifyBefore
+//                    )
+//
+//                    events.append(finalEvent)
+//                }
+//            } else {
+//                let parts = line.split(separator: ":", maxSplits: 1)
+//                if parts.count == 2 {
+//                    let key = String(parts[0]).trimmingCharacters(in: .whitespaces)
+//                    let value = String(parts[1]).trimmingCharacters(in: .whitespaces)
+//
+//                    if key == "DESCRIPTION" {
+//                        // Collect the description content
+//                        currentDescription = value
+//                        isCollectingDescription = true
+//                    } else {
+//                        event[key] = value
+//                        isCollectingDescription = false
+//                    }
+//                } else if isCollectingDescription {
+//                    // Handle multi-line description (continued on next line)
+//                    currentDescription += " " + line.trimmingCharacters(in: .whitespaces)
+//                }
+//            }
+//        }
+//        return events
+//    }
+//    
+//    
+//    
+//    
+//    //using this
+//    private func saveEventsToFirestore(events: [MoodleEvent], completion: @escaping () -> Void) {
+//        guard let userId = Auth.auth().currentUser?.uid else { return }
+//
+//        let userEventsRef = db.collection("users").document(userId).collection("moodleEvents")
+//
+//        userEventsRef.getDocuments { snapshot, _ in
+//            for doc in snapshot?.documents ?? [] {
+//                userEventsRef.document(doc.documentID).delete()
+//            }
+//
+//            let dispatchGroup = DispatchGroup()
+//
+//            for event in events {
+//                dispatchGroup.enter()
+//                var eventData: [String: Any] = [
+//                    "id": event.id,
+//                    "title": event.title,
+//                    "startDate": event.startDate,
+//                    "endDate": event.endDate,
+//                    "notifyBefore": event.notifyBefore ?? 0
+//                ]
+//
+//                if !event.description.isEmpty {
+//                    eventData["description"] = event.description
+//                }
+//
+//                userEventsRef.document(event.id).setData(eventData) { _ in
+//                    dispatchGroup.leave()
+//                }
+//            }
+//
+//            dispatchGroup.notify(queue: .main) {
+//                completion()  // Ensure the refresh happens after Firestore update
+//            }
+//        }
+//    }
+//
+//
+////    private func saveEventsToFirestore(events: [MoodleEvent]) {
+////        guard let userId = Auth.auth().currentUser?.uid else { return }
+////
+////        let userEventsRef = db.collection("users").document(userId).collection("moodleEvents")
+////
+////        // Clear existing events
+////        userEventsRef.getDocuments { snapshot, _ in
+////            for doc in snapshot?.documents ?? [] {
+////                userEventsRef.document(doc.documentID).delete()
+////            }
+////
+////            // Save new events
+////            for event in events {
+////                var eventData: [String: Any] = [
+////                    "id": event.id,
+////                    "title": event.title,
+////                    "startDate": event.startDate,
+////                    "endDate": event.endDate,
+////                    "notifyBefore": event.notifyBefore ?? 0
+////                ]
+////
+////                if !event.description.isEmpty {
+////                    eventData["description"] = event.description
+////                }
+////
+////                userEventsRef.document(event.id).setData(eventData)
+////            }
+////        }
+////    }
+//
+//    private func parseDate(_ dateString: String) -> Date? {
+//        let isoFormatter = ISO8601DateFormatter()
+//        isoFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
+//
+//        return isoFormatter.date(from: dateString.trimmingCharacters(in: .whitespacesAndNewlines))
+//    }
+//
+//    private func cleanDescription(_ description: String) -> String {
+//        var cleanedDescription = description
+//
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n")  // Convert ICS \n to actual newlines
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")   // Remove escaped commas
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")   // Remove escaped semicolons
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "  +", with: " ", options: .regularExpression)
+//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//
+//        return cleanedDescription
+//    }
+//
+//    func loadEventsFromFirestore() {
+//        guard let userId = Auth.auth().currentUser?.uid else { return }
+//
+//        db.collection("users").document(userId).collection("moodleEvents")
+//            .getDocuments { snapshot, error in
+//                if let error = error {
+//                    print("Error loading events: \(error.localizedDescription)")
+//                    return
+//                }
+//
+//                if let documents = snapshot?.documents {
+//                    DispatchQueue.main.async {
+//                        self.events = documents.compactMap { doc in
+//                            let data = doc.data()
+//                            return MoodleEvent(
+//                                id: data["id"] as? String ?? UUID().uuidString,
+//                                title: data["title"] as? String ?? "Unknown",
+//                                startDate: data["startDate"] as? TimeInterval ?? 0,
+//                                endDate: data["endDate"] as? TimeInterval ?? 0,
+//                                description: data["description"] as? String ?? "No description",
+//                                notifyBefore: data["notifyBefore"] as? TimeInterval
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//    }
+//}
 
+
+
+
+
+
+import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
+
+class ImportCalendarViewModel: ObservableObject {
     
+    @Published var events: [MoodleEvent] = []
+    @Published var moodleURL: String = ""
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String? = nil
+    @Published var isImportComplete: Bool = false
+    @Published var showDeleteConfirmation: Bool = false// Added to control navigation
     
+    private let db = Firestore.firestore()
+    
+    init() {
+        loadEventsFromFirestore()
+    }
     func importCalendar(completion: @escaping (String?) -> Void) {
         let trimmedURL = moodleURL.trimmingCharacters(in: .whitespacesAndNewlines)
-
+        
         guard !trimmedURL.isEmpty, let url = URL(string: trimmedURL) else {
             self.errorMessage = "Invalid Moodle Calendar URL."
             completion("Invalid Moodle Calendar URL.")
             return
         }
-
+        
         isLoading = true
         errorMessage = nil
-
+        
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self else { return }
-
+            
             if let error = error {
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -623,7 +893,7 @@ class ImportCalendarViewModel: ObservableObject {
                 }
                 return
             }
-
+            
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -632,10 +902,10 @@ class ImportCalendarViewModel: ObservableObject {
                 }
                 return
             }
-
+            
             if let data = data, let icsString = String(data: data, encoding: .utf8) {
                 let parsedEvents = self.parseICS(icsString)
-
+                
                 DispatchQueue.main.async {
                     self.events = parsedEvents
                     self.saveEventsToFirestore(events: parsedEvents) {
@@ -655,175 +925,303 @@ class ImportCalendarViewModel: ObservableObject {
         }
         task.resume()
     }
-
-
-    private func parseICS(_ icsString: String) -> [MoodleEvent] {
-        let lines = icsString.components(separatedBy: "\n")
-        var event: [String: String] = [:]
-        var events: [MoodleEvent] = []
-        var currentDescription = ""
-        var isCollectingDescription = false
-
-        for line in lines {
-            if line.hasPrefix("BEGIN:VEVENT") {
-                event = [:]
-                currentDescription = ""
-                isCollectingDescription = false
-            } else if line.hasPrefix("END:VEVENT") {
-                if let id = event["UID"],
-                   let title = event["SUMMARY"],
-                   let startDateStr = event["DTSTART"],
-                   let endDateStr = event["DTEND"],
-                   let startDate = parseDate(startDateStr),
-                   let endDate = parseDate(endDateStr) {
-                    
-                    // Create event with raw description first
-                    let moodleEvent = MoodleEvent(
-                        id: id,
-                        title: title,
-                        startDate: startDate.timeIntervalSince1970,
-                        endDate: endDate.timeIntervalSince1970,
-                        description: currentDescription.isEmpty ? "No description" : currentDescription,
-                        notifyBefore: nil
-                    )
-
-                    // Clean and format description
-                    let attributedDescription = self.cleanDescription(moodleEvent.description)
-
-                    // Create a new MoodleEvent with the cleaned description
-                    let finalEvent = MoodleEvent(
-                        id: moodleEvent.id,
-                        title: moodleEvent.title,
-                        startDate: moodleEvent.startDate,
-                        endDate: moodleEvent.endDate,
-                        description: attributedDescription,
-                        notifyBefore: moodleEvent.notifyBefore
-                    )
-
-                    events.append(finalEvent)
-                }
-            } else {
-                let parts = line.split(separator: ":", maxSplits: 1)
-                if parts.count == 2 {
-                    let key = String(parts[0]).trimmingCharacters(in: .whitespaces)
-                    let value = String(parts[1]).trimmingCharacters(in: .whitespaces)
-
-                    if key == "DESCRIPTION" {
-                        // Collect the description content
-                        currentDescription = value
-                        isCollectingDescription = true
-                    } else {
-                        event[key] = value
-                        isCollectingDescription = false
-                    }
-                } else if isCollectingDescription {
-                    // Handle multi-line description (continued on next line)
-                    currentDescription += " " + line.trimmingCharacters(in: .whitespaces)
-                }
-            }
-        }
-        return events
-    }
     
-    private func saveEventsToFirestore(events: [MoodleEvent], completion: @escaping () -> Void) {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-
-        let userEventsRef = db.collection("users").document(userId).collection("moodleEvents")
-
-        userEventsRef.getDocuments { snapshot, _ in
-            for doc in snapshot?.documents ?? [] {
-                userEventsRef.document(doc.documentID).delete()
-            }
-
-            let dispatchGroup = DispatchGroup()
-
-            for event in events {
-                dispatchGroup.enter()
-                var eventData: [String: Any] = [
-                    "id": event.id,
-                    "title": event.title,
-                    "startDate": event.startDate,
-                    "endDate": event.endDate,
-                    "notifyBefore": event.notifyBefore ?? 0
-                ]
-
-                if !event.description.isEmpty {
-                    eventData["description"] = event.description
-                }
-
-                userEventsRef.document(event.id).setData(eventData) { _ in
-                    dispatchGroup.leave()
-                }
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                completion()  // Ensure the refresh happens after Firestore update
-            }
-        }
-    }
-
-
-//    private func saveEventsToFirestore(events: [MoodleEvent]) {
-//        guard let userId = Auth.auth().currentUser?.uid else { return }
+    
+    // works
+//    private func cleanDescription(_ description: String) -> String {
+//        var cleanedDescription = description
+//        
+//        // Step 1: Fix escaped newlines and escape sequences
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n +", with: "") // Remove backslashes
+//        
+//        
+//        // Step 2: Combine broken words (e.g., "mo" + "dule" -> "module")
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n([a-zA-Z])", with: "$1", options: .regularExpression) // Combine split words across newlines
 //
-//        let userEventsRef = db.collection("users").document(userId).collection("moodleEvents")
+//        // Step 3: Keep bullet points and list formatting unchanged
+//        // Do not replace the bullet point format here
+//        // cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n *", with: "\n• ", options: .regularExpression)
 //
-//        // Clear existing events
-//        userEventsRef.getDocuments { snapshot, _ in
-//            for doc in snapshot?.documents ?? [] {
-//                userEventsRef.document(doc.documentID).delete()
-//            }
+//        // Step 4: Collapse multiple newlines into one newline
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression) // Collapse multiple newlines into one
 //
-//            // Save new events
-//            for event in events {
-//                var eventData: [String: Any] = [
-//                    "id": event.id,
-//                    "title": event.title,
-//                    "startDate": event.startDate,
-//                    "endDate": event.endDate,
-//                    "notifyBefore": event.notifyBefore ?? 0
-//                ]
+//        // Step 5: Remove extra spaces or non-breaking spaces
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\u{00A0}", with: " ") // Non-breaking space
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: " {2,}", with: " ", options: .regularExpression) // Collapse multiple spaces
 //
-//                if !event.description.isEmpty {
-//                    eventData["description"] = event.description
-//                }
-//
-//                userEventsRef.document(event.id).setData(eventData)
-//            }
-//        }
+//        // Step 6: Trim leading/trailing whitespace and newlines
+//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//        
+//        return cleanedDescription
 //    }
 
-    private func parseDate(_ dateString: String) -> Date? {
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
 
-        return isoFormatter.date(from: dateString.trimmingCharacters(in: .whitespacesAndNewlines))
-    }
-
+//    private func cleanDescription(_ description: String) -> String {
+//        var cleanedDescription = description
+//
+//        // Remove unnecessary leading and trailing whitespaces
+//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//
+//        // Remove escaped characters (like \n, \, etc.)
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "") // Remove backslashes
+//
+//        // Remove newlines and spaces that split words
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "(?<=\\w)\\s+(?=\\w)", with: "", options: .regularExpression) // Remove spaces within words
+//
+//        // Remove any newline characters
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: " ") // Replace all newlines with space
+//
+//        // Replace multiple spaces with a single space
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+//
+//        // Optionally, remove unwanted characters (e.g., special characters or excess punctuation)
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "[^a-zA-Z0-9\\s.,-]", with: "", options: .regularExpression)
+//
+//        // Trim any extra leading/trailing spaces that may have been added
+//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//
+//        return cleanedDescription
+//    }
+    
     private func cleanDescription(_ description: String) -> String {
         var cleanedDescription = description
 
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n")  // Convert ICS \n to actual newlines
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")   // Remove escaped commas
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")   // Remove escaped semicolons
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "  +", with: " ", options: .regularExpression)
+        // Remove unnecessary leading and trailing whitespaces
+        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Remove escaped characters (like \n, \, etc.)
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "") // Remove backslashes
+
+        // Remove spaces that break words (like "Mo dule" -> "Module")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "(?<=\\w)\\s+(?=\\w)", with: "", options: .regularExpression)
+
+        // Replace multiple spaces with a single space
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+
+        // Fix newlines: Replace single newlines with spaces, but leave newlines between distinct sections or paragraphs
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: " ") // Convert all newlines to space
+
+        // Optionally, remove unwanted characters (e.g., special characters or excess punctuation)
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "[^a-zA-Z0-9\\s.,-]", with: "", options: .regularExpression)
+
+        // Ensure no leading/trailing spaces are left after cleaning
         cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
 
         return cleanedDescription
     }
 
+
+
+
+    
+
+    
+    //using
+    //    private func parseICS(_ icsString: String) -> [MoodleEvent] {
+    //        let lines = icsString.components(separatedBy: "\n")
+    //        var event: [String: String] = [:]
+    //        var events: [MoodleEvent] = []
+    //        var currentDescription = ""
+    //        var isCollectingDescription = false
+    //
+    //        for line in lines {
+    //            if line.hasPrefix("BEGIN:VEVENT") {
+    //                event = [:]
+    //                currentDescription = ""
+    //                isCollectingDescription = false
+    //            } else if line.hasPrefix("END:VEVENT") {
+    //                if let id = event["UID"],
+    //                   let title = event["SUMMARY"],
+    //                   let startDateStr = event["DTSTART"],
+    //                   let endDateStr = event["DTEND"],
+    //                   let startDate = parseDate(startDateStr),
+    //                   let endDate = parseDate(endDateStr) {
+    //
+    //                    // Create event with raw description first
+    //                    let moodleEvent = MoodleEvent(
+    //                        id: id,
+    //                        title: title,
+    //                        startDate: startDate.timeIntervalSince1970,
+    //                        endDate: endDate.timeIntervalSince1970,
+    //                        description: currentDescription.isEmpty ? "No description" : currentDescription,
+    //                        notifyBefore: nil
+    //                    )
+    //
+    //                    // Clean and format description
+    //                    //                    let attributedDescription = self.cleanDescription(moodleEvent.description)
+    //
+    //                    // Create a new MoodleEvent with the cleaned description
+    //                    let finalEvent = MoodleEvent(
+    //                        id: moodleEvent.id,
+    //                        title: moodleEvent.title,
+    //                        startDate: moodleEvent.startDate,
+    //                        endDate: moodleEvent.endDate,
+    //                        description: moodleEvent.description,
+    //                        notifyBefore: moodleEvent.notifyBefore
+    //                    )
+    //
+    //                    events.append(finalEvent)
+    //                }
+    //            } else {
+    //                let parts = line.split(separator: ":", maxSplits: 1)
+    //                if parts.count == 2 {
+    //                    let key = String(parts[0]).trimmingCharacters(in: .whitespaces)
+    //                    let value = String(parts[1]).trimmingCharacters(in: .whitespaces)
+    //
+    //                    if key == "DESCRIPTION" {
+    //                        // Collect the description content
+    //                        currentDescription = value
+    //                        isCollectingDescription = true
+    //                    } else {
+    //                        event[key] = value
+    //                        isCollectingDescription = false
+    //                    }
+    //                } else if isCollectingDescription {
+    //                    // Handle multi-line description (continued on next line)
+    //                    currentDescription += " " + line.trimmingCharacters(in: .whitespaces)
+    //                }
+    //            }
+    //        }
+    //        return events
+    //    }
+    
+    private func parseICS(_ icsString: String) -> [MoodleEvent] {
+            let lines = icsString.components(separatedBy: "\n")
+            var event: [String: String] = [:]
+            var events: [MoodleEvent] = []
+            var currentKey: String?
+            var currentValue = ""
+            
+            for line in lines {
+                if line.hasPrefix("BEGIN:VEVENT") {
+                    event = [:]
+                    currentKey = nil
+                    currentValue = ""
+                } else if line.hasPrefix("END:VEVENT") {
+                    if let id = event["UID"],
+                       let title = event["SUMMARY"],
+                       let startDateStr = event["DTSTART"],
+                       let endDateStr = event["DTEND"],
+                       let startDate = parseDate(startDateStr),
+                       let endDate = parseDate(endDateStr) {
+
+                        let description = cleanDescription(event["DESCRIPTION"] ?? "No description")
+
+                        let moodleEvent = MoodleEvent(
+                            id: id,
+                            title: title,
+                            startDate: startDate.timeIntervalSince1970,
+                            endDate: endDate.timeIntervalSince1970,
+                            description: description,
+                            notifyBefore: nil
+                        )
+
+                        events.append(moodleEvent)
+                    }
+                } else {
+                    if line.hasPrefix(" ") || line.hasPrefix("\t") {
+                        
+                        currentValue += " " + line.trimmingCharacters(in: .whitespaces)
+                    } else {
+                       
+                        if let key = currentKey {
+                            event[key] = currentValue
+                        }
+                        
+                        let parts = line.split(separator: ":", maxSplits: 1)
+                        if parts.count == 2 {
+                            currentKey = String(parts[0]).trimmingCharacters(in: .whitespaces)
+                            currentValue = String(parts[1]).trimmingCharacters(in: .whitespaces)
+                        } else {
+                            currentKey = nil
+                            currentValue = ""
+                        }
+                    }
+                }
+            }
+            
+            return events
+        }
+        
+        func saveEventsToFirestore(events: [MoodleEvent], completion: @escaping () -> Void) {
+            guard let userId = Auth.auth().currentUser?.uid else { return }
+            
+            let userEventsRef = db.collection("users").document(userId).collection("moodleEvents")
+            
+            userEventsRef.getDocuments { snapshot, _ in
+                for doc in snapshot?.documents ?? [] {
+                    userEventsRef.document(doc.documentID).delete()
+                }
+                
+                let dispatchGroup = DispatchGroup()
+                
+                for event in events {
+                    dispatchGroup.enter()
+                    var eventData: [String: Any] = [
+                        "id": event.id,
+                        "title": event.title,
+                        "startDate": event.startDate,
+                        "endDate": event.endDate,
+                        "notifyBefore": event.notifyBefore ?? 0
+                    ]
+                    
+                    if !event.description.isEmpty {
+                        eventData["description"] = event.description
+                    }
+                    
+                    userEventsRef.document(event.id).setData(eventData) { _ in
+                        dispatchGroup.leave()
+                    }
+                }
+                
+                dispatchGroup.notify(queue: .main) {
+                    completion()  // Ensure the refresh happens after Firestore update
+                }
+            }
+        }
+    
+    private func parseDate(_ dateString: String) -> Date? {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
+        
+        return isoFormatter.date(from: dateString.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+    
+    
+//        private func cleanDescription(_ description: String) -> String {
+//            var cleanedDescription = description
+//    
+//            cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n")  // Convert ICS \n to actual newlines
+//            cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")   // Remove escaped commas
+//            cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")   // Remove escaped semicolons
+//            cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
+//            cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
+//            cleanedDescription = cleanedDescription.replacingOccurrences(of: "  +", with: " ", options: .regularExpression)
+//            cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//    
+//            return cleanedDescription
+//        }
+    
     func loadEventsFromFirestore() {
         guard let userId = Auth.auth().currentUser?.uid else { return }
-
+        
         db.collection("users").document(userId).collection("moodleEvents")
             .getDocuments { snapshot, error in
                 if let error = error {
                     print("Error loading events: \(error.localizedDescription)")
                     return
                 }
-
+                
                 if let documents = snapshot?.documents {
                     DispatchQueue.main.async {
                         self.events = documents.compactMap { doc in
@@ -841,10 +1239,53 @@ class ImportCalendarViewModel: ObservableObject {
                 }
             }
     }
+    
+    func deleteEvent(by id: String) {
+        events.removeAll { $0.id == id }
+        db.collection("moodleEvents").document(id).delete { error in
+            if let error = error {
+                print("Error deleting event: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func deleteAllEvents() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
+        
+        let collectionRef = db.collection("users").document(userId).collection("moodleEvents")
+        
+        collectionRef.getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching events: \(error.localizedDescription)")
+                return
+            }
+            
+            let batch = self.db.batch() // Firestore batch operation
+            
+            snapshot?.documents.forEach { document in
+                let docRef = collectionRef.document(document.documentID)
+                batch.deleteDocument(docRef)
+            }
+            
+            batch.commit { error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print("Error deleting documents: \(error.localizedDescription)")
+                    } else {
+                        self.events.removeAll()  // Update UI after deletion
+                        print("All Moodle events deleted successfully.")
+                        
+                        // Optional: Show an alert in SwiftUI
+                        self.showDeleteConfirmation = true
+                    }
+                }
+            }
+        }
+    }
 }
-
-
-
 
 
 

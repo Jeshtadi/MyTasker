@@ -276,7 +276,7 @@ struct CalendarView: View {
                                         .bold()
                                     Text(event.description)
                                         .font(.body)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.pink)
                                     Text("Starts: \(Date(timeIntervalSince1970: event.startDate), formatter: dateFormatter)")
                                         .font(.caption)
                                         .foregroundColor(.gray)

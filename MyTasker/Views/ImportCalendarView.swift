@@ -166,7 +166,7 @@
 
 
 
-
+//using code
 import SwiftUI
 
 struct ImportCalendarView: View {
@@ -248,6 +248,17 @@ struct ImportCalendarView: View {
                     .foregroundColor(ColorPalette.accentColor)
                     .sheet(isPresented: $showInstructions) {
                         MoodleInstructionsView()
+                    }
+                    Button(action: {
+                        viewModel.deleteAllEvents()
+                    }) {
+                        Text("Delete Moodle Events")
+                            .fontWeight(.bold)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
 
                     // Navigation link to CalendarView (hidden but activated when navigateToCalendar is true)
