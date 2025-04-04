@@ -38,44 +38,7 @@ struct AfterLoginView: View {
         items.filter { $0.isDone }
     }
     
-    
-    //testing
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        let taskRef = db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId)
-//        
-//        // Update the task to set isDELETED to true
-//        taskRef.updateData(["isDeleted": true]) { error in
-//            if let error = error {
-//                print("Error updating document: \(error.localizedDescription)")
-//            } else {
-//                print("Document successfully marked as deleted!")
-//            }
-//        }
-//    }
 
-//    func deleteTask(taskId: String) {
-//        let db = Firestore.firestore()
-//        let taskRef = db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId)
-//        
-//        taskRef.updateData(["isDeleted": true]) { error in
-//            if let error = error {
-//                print("Error updating document: \(error.localizedDescription)")
-//            } else {
-//                print("Task marked as deleted successfully.")
-//                
-//                taskRef.delete { error in
-//                    if let error = error {
-//                        print("Error deleting document from todos: \(error.localizedDescription)")
-//                    } else {
-//                        print("Task successfully deleted from todos collection!")
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-  
 
     func deleteTask(taskId: String) {
         let db = Firestore.firestore()
@@ -101,21 +64,7 @@ struct AfterLoginView: View {
         }
     }
 
-    
-    
-    // Function to delete task works and using
-//        func deleteTask(taskId: String) {
-//            let db = Firestore.firestore()
-//            db.collection("users/\(profileVM.user?.id ?? "")/todos").document(taskId).delete { error in
-//                if let error = error {
-//                    print("Error deleting document: \(error.localizedDescription)")
-//                } else {
-//                    print("Document successfully deleted!")
-//                }
-//            }
-//        }
-    
-    
+  
     
     // Calculate remaining tasks count
     var remainingTasksCount: Int {

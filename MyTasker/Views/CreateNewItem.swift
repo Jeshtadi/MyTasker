@@ -28,23 +28,6 @@ struct CreateNewItem: View {
                         .foregroundColor(ColorPalette.textPrimary)
                 }
 
-//                Section {
-//                    HStack {
-//                        TextField("Enter duration", value: $viewModel.duration, format: .number)
-//                            .keyboardType(.numberPad)
-//                            .textFieldStyle(DefaultTextFieldStyle())
-//                            .foregroundColor(ColorPalette.textPrimary)
-//                        
-//                        Picker("Unit", selection: $viewModel.isMinutesSelected) {
-//                            Text("Minutes").tag(true)
-//                            Text("Hours").tag(false)
-//                        }
-//                        .pickerStyle(MenuPickerStyle())
-//                    }
-//                } header: {
-//                    Text("Duration")
-//                        .foregroundColor(ColorPalette.textPrimary)
-//                }
         
                 // Due Date
                 Section(header: Text("Due Date").foregroundColor(ColorPalette.textPrimary)) {
@@ -87,13 +70,6 @@ struct CreateNewItem: View {
                     }
                     .pickerStyle(MenuPickerStyle())
                 }
-
-                // Additional Info
-//                Section(header: Text("Additional Info").foregroundColor(ColorPalette.textPrimary)) {
-//                    TextField("Add links, location, phone number, etc.", text: $viewModel.additionalInfo)
-//                        .textFieldStyle(DefaultTextFieldStyle())
-//                        .foregroundColor(ColorPalette.textPrimary)
-//                }
 
                 // Save Button
                 Section {
