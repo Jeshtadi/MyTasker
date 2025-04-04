@@ -184,29 +184,21 @@ class NotificationManager {
         let notificationTime = task.dueDate - notifyBefore
         if notificationTime < Date().timeIntervalSince1970 {
             print("Notification time is in the past. Skipping.")
-            return
-        }
-        
+            return}
         let content = UNMutableNotificationContent()
         content.title = "Task Reminder"
-
         let dueDate = Date(timeIntervalSince1970: task.dueDate)
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
         let formattedDueDate = dateFormatter.string(from: dueDate)
-
         let taskDescription = task.description ?? "No description provided"
         content.body = "Your task \"\(task.title)\" is due on \(formattedDueDate) \(taskDescription)"
         content.sound = .default
-
-        
         let triggerDate = Date(timeIntervalSince1970: notificationTime)
         let trigger = UNCalendarNotificationTrigger(
             dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
-            repeats: false
-        )
-        
+            repeats: false)
         let request = UNNotificationRequest(identifier: task.id, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {

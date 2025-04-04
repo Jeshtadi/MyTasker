@@ -30,6 +30,27 @@ struct ButtonLogin: View {
        
 }
 
+struct ButtonRegister: View {
+    let title: String
+    let background: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(Color.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(background)
+                .cornerRadius(8)
+                .padding(.horizontal, 40)
+        }
+    }
+}
+
 struct ButtonView_Previews: PreviewProvider {
     static var previews: some View {
         ButtonLogin(title: "Value", background: ColorPalette.buttonBackground) {

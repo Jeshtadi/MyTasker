@@ -215,10 +215,10 @@ class CreateNewItemVM: ObservableObject {
                         description: data["description"] as? String ?? "",
                         dueDate: data["dueDate"] as? TimeInterval ?? 0,
                         createDate: data["createDate"] as? TimeInterval ?? 0,
-                        duration: data["duration"] as? TimeInterval,
+//                        duration: data["duration"] as? TimeInterval,
                         isDone: data["isDone"] as? Bool ?? false,
                         color: data["color"] as? String ?? "Default",
-                        repeatInterval: data["repeatInterval"] as? TimeInterval,
+//                        repeatInterval: data["repeatInterval"] as? TimeInterval,
                         notifyBefore: data["notifyBefore"] as? TimeInterval
                     )
                 }
@@ -236,10 +236,10 @@ class CreateNewItemVM: ObservableObject {
                 description: description,
                 dueDate: dueDate.timeIntervalSince1970,
                 createDate: Date().timeIntervalSince1970,
-                duration: duration,
+//                duration: duration,
                 isDone: false,
                 color: selectedColor,
-                repeatInterval: repeatInterval,
+//                repeatInterval: repeatInterval,
                 notifyBefore: notifyBefore
             )
     

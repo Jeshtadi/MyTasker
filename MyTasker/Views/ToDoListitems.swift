@@ -425,20 +425,20 @@ struct ToDoListitems: View {
                     }
                 }
                 
-                if let repeatInterval = item.repeatInterval, repeatInterval > 0 {
-                    let intervalInDays = Int(repeatInterval) / 86400 
-                    
-                    let weeks = intervalInDays / 7
-                    let months = intervalInDays / 30
-                    
-                    if months > 0 {
-                        Text("Notify Every: \(months) month\(months > 1 ? "s" : "")")
-                    } else if weeks > 0 {
-                        Text("Notify Every: \(weeks) week\(weeks > 1 ? "s" : "")")
-                    } else {
-                        Text("Notify Every: \(intervalInDays) day\(intervalInDays > 1 ? "s" : "")")
-                    }
-                }
+//                if let repeatInterval = item.repeatInterval, repeatInterval > 0 {
+//                    let intervalInDays = Int(repeatInterval) / 86400 
+//                    
+//                    let weeks = intervalInDays / 7
+//                    let months = intervalInDays / 30
+//                    
+//                    if months > 0 {
+//                        Text("Notify Every: \(months) month\(months > 1 ? "s" : "")")
+//                    } else if weeks > 0 {
+//                        Text("Notify Every: \(weeks) week\(weeks > 1 ? "s" : "")")
+//                    } else {
+//                        Text("Notify Every: \(intervalInDays) day\(intervalInDays > 1 ? "s" : "")")
+//                    }
+//                }
             
 //                if let durationInSeconds = item.duration {
 //                    let hours = Int(durationInSeconds) / 60

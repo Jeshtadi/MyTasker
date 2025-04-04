@@ -158,7 +158,7 @@ struct LoginV: View {
                 Alert(title: Text("Password Reset"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
             .sheet(isPresented: $isForgotPasswordAlertPresented) {
-                ForgotPasswordView(resetEmail: $resetEmail, onSubmit: handleForgotPassword)
+                ForgotPasswordView()
             }
         }
     }
@@ -178,33 +178,47 @@ struct LoginV: View {
 }
 
 struct ForgotPasswordView: View {
-    @Binding var resetEmail: String
-    var onSubmit: () -> Void
+    @StateObject var viewModel = LoginVVm()
+    @State private var isAlertPresented: Bool = false
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Enter your email address to reset your password.")
+            Text("Enter your email to reset your password.")
                 .font(.headline)
                 .padding()
             
-            TextField("Email Address", text: $resetEmail)
+            TextField("Email Address", text: $viewModel.email)
                 .padding()
-                .background(Color.black)
+                .background(Color.black.opacity(0.1))
                 .cornerRadius(8)
                 .keyboardType(.emailAddress)
                 .autocapitalization(.none)
             
             Button("Submit") {
-                onSubmit()
+                viewModel.sendPasswordResetEmail()
+                
+                if viewModel.successMessage.isEmpty {
+                    isAlertPresented = true
+                }
             }
             .padding()
             .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(8)
+            .alert(isPresented: $isAlertPresented) {
+                Alert(title: Text("Error"), message: Text(viewModel.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            
+            if !viewModel.successMessage.isEmpty {
+                Text(viewModel.successMessage)
+                    .foregroundColor(.green)
+                    .padding()
+            }
         }
         .padding()
     }
 }
+
 
 #Preview {
     LoginV()

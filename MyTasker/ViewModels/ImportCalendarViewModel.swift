@@ -928,36 +928,36 @@ class ImportCalendarViewModel: ObservableObject {
     
     
     // works
-//    private func cleanDescription(_ description: String) -> String {
-//        var cleanedDescription = description
-//        
-//        // Step 1: Fix escaped newlines and escape sequences
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n +", with: "") // Remove backslashes
-//        
-//        
-//        // Step 2: Combine broken words (e.g., "mo" + "dule" -> "module")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n([a-zA-Z])", with: "$1", options: .regularExpression) // Combine split words across newlines
-//
-//        // Step 3: Keep bullet points and list formatting unchanged
-//        // Do not replace the bullet point format here
-//        // cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n *", with: "\n• ", options: .regularExpression)
-//
-//        // Step 4: Collapse multiple newlines into one newline
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression) // Collapse multiple newlines into one
-//
-//        // Step 5: Remove extra spaces or non-breaking spaces
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\u{00A0}", with: " ") // Non-breaking space
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: " {2,}", with: " ", options: .regularExpression) // Collapse multiple spaces
-//
-//        // Step 6: Trim leading/trailing whitespace and newlines
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//        
-//        return cleanedDescription
-//    }
+    private func cleanDescription(_ description: String) -> String {
+        var cleanedDescription = description
+        
+        // Step 1: Fix escaped newlines and escape sequences
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n +", with: "") // Remove backslashes
+        
+        
+        // Step 2: Combine broken words (e.g., "mo" + "dule" -> "module")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n([a-zA-Z])", with: "$1", options: .regularExpression) // Combine split words across newlines
+
+        // Step 3: Keep bullet points and list formatting unchanged
+        // Do not replace the bullet point format here
+        // cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n *", with: "\n• ", options: .regularExpression)
+
+        // Step 4: Collapse multiple newlines into one newline
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression) // Collapse multiple newlines into one
+
+        // Step 5: Remove extra spaces or non-breaking spaces
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\u{00A0}", with: " ") // Non-breaking space
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: " {2,}", with: " ", options: .regularExpression) // Collapse multiple spaces
+
+        // Step 6: Trim leading/trailing whitespace and newlines
+        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return cleanedDescription
+    }
 
 
 //    private func cleanDescription(_ description: String) -> String {
@@ -990,35 +990,35 @@ class ImportCalendarViewModel: ObservableObject {
 //        return cleanedDescription
 //    }
     
-    private func cleanDescription(_ description: String) -> String {
-        var cleanedDescription = description
-
-        // Remove unnecessary leading and trailing whitespaces
-        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        // Remove escaped characters (like \n, \, etc.)
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "") // Remove backslashes
-
-        // Remove spaces that break words (like "Mo dule" -> "Module")
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "(?<=\\w)\\s+(?=\\w)", with: "", options: .regularExpression)
-
-        // Replace multiple spaces with a single space
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-
-        // Fix newlines: Replace single newlines with spaces, but leave newlines between distinct sections or paragraphs
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: " ") // Convert all newlines to space
-
-        // Optionally, remove unwanted characters (e.g., special characters or excess punctuation)
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "[^a-zA-Z0-9\\s.,-]", with: "", options: .regularExpression)
-
-        // Ensure no leading/trailing spaces are left after cleaning
-        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return cleanedDescription
-    }
+//    private func cleanDescription(_ description: String) -> String {
+//        var cleanedDescription = description
+//
+//        // Remove unnecessary leading and trailing whitespaces
+//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//
+//        // Remove escaped characters (like \n, \, etc.)
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "") // Remove backslashes
+//
+//        // Remove spaces that break words (like "Mo dule" -> "Module")
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "(?<=\\w)\\s+(?=\\w)", with: "", options: .regularExpression)
+//
+//        // Replace multiple spaces with a single space
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+//
+//        // Fix newlines: Replace single newlines with spaces, but leave newlines between distinct sections or paragraphs
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: " ") // Convert all newlines to space
+//
+//        // Optionally, remove unwanted characters (e.g., special characters or excess punctuation)
+//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "[^a-zA-Z0-9\\s.,-]", with: "", options: .regularExpression)
+//
+//        // Ensure no leading/trailing spaces are left after cleaning
+//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+//
+//        return cleanedDescription
+//    }
 
 
 
@@ -1101,7 +1101,6 @@ class ImportCalendarViewModel: ObservableObject {
             var events: [MoodleEvent] = []
             var currentKey: String?
             var currentValue = ""
-            
             for line in lines {
                 if line.hasPrefix("BEGIN:VEVENT") {
                     event = [:]
@@ -1114,30 +1113,23 @@ class ImportCalendarViewModel: ObservableObject {
                        let endDateStr = event["DTEND"],
                        let startDate = parseDate(startDateStr),
                        let endDate = parseDate(endDateStr) {
-
                         let description = cleanDescription(event["DESCRIPTION"] ?? "No description")
-
                         let moodleEvent = MoodleEvent(
                             id: id,
                             title: title,
                             startDate: startDate.timeIntervalSince1970,
                             endDate: endDate.timeIntervalSince1970,
                             description: description,
-                            notifyBefore: nil
-                        )
-
+                            notifyBefore: nil)
                         events.append(moodleEvent)
                     }
                 } else {
                     if line.hasPrefix(" ") || line.hasPrefix("\t") {
-                        
                         currentValue += " " + line.trimmingCharacters(in: .whitespaces)
                     } else {
-                       
                         if let key = currentKey {
                             event[key] = currentValue
                         }
-                        
                         let parts = line.split(separator: ":", maxSplits: 1)
                         if parts.count == 2 {
                             currentKey = String(parts[0]).trimmingCharacters(in: .whitespaces)
@@ -1150,8 +1142,7 @@ class ImportCalendarViewModel: ObservableObject {
                 }
             }
             
-            return events
-        }
+            return events }
         
         func saveEventsToFirestore(events: [MoodleEvent], completion: @escaping () -> Void) {
             guard let userId = Auth.auth().currentUser?.uid else { return }

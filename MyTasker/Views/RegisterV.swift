@@ -4,38 +4,24 @@
 //
 //  Created by Anushya Jeshtadi on 22/01/2025.
 
+
 import SwiftUI
 
 struct RegisterV: View {
-//    @State private var email: String = ""
-//    @State private var password: String = ""
-//    @State private var confirmPassword: String = ""
-////    @State private var mobile: String = ""
-//    @State private var firstName: String = ""
-//    @State private var lastName: String = ""
     @StateObject var viewModel = RegisterVVM()
     @State private var isPasswordVisible = false
     @State private var isConfirmPasswordVisible = false
+    @State private var registrationSuccessful = false
+    @State private var showErrorAlert = false
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background Color
                 ColorPalette.primaryBackground
                     .ignoresSafeArea()
                 
                 VStack(spacing: 40) {
-                    // Back to Login Button
-                    //                    NavigationLink(destination: LoginV()) {
-                    //                        Text("< Back")
-                    //                            .font(.headline)
-                    //                            .foregroundColor(ColorPalette.textPrimary)
-                    //                            .padding(.top, 20)
-                    //                            .padding(.leading, 20)
-                    //                            .frame(maxWidth: .infinity, alignment: .leading)
-                    //                    }
-                    
-                    // Sign Up Heading
                     Text("Sign Up")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -70,7 +56,6 @@ struct RegisterV: View {
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
                         .autocorrectionDisabled()
-                    //                        .textInputAutocapitalization(.never)
                     
                     // Password Field
                     ZStack(alignment: .trailing) {
@@ -126,14 +111,44 @@ struct RegisterV: View {
                     }
                     .padding(.horizontal, 40)
                     
+                    // Error message
+                    if !viewModel.errorMessage.isEmpty {
+                        Text(viewModel.errorMessage)
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+                    
                     // Sign Up Button
-                    ButtonLogin(title: "Sign Up", background: ColorPalette.buttonBackground) {
-                        //                        Attempt registration in
-                        viewModel.register()
+                    ButtonRegister(title: "Sign Up", background: ColorPalette.buttonBackground) {
+                        viewModel.register { success, error in
+                            if let error = error {
+                                // Show the error alert
+                                showErrorAlert = true
+                                viewModel.errorMessage = error
+                            } else if success {
+                                registrationSuccessful = true // Trigger navigation
+                            }
+                        }
                     }
                     
                     Spacer()
+                    
+                    // Using NavigationLink with value-based navigation
+                    NavigationLink(value: registrationSuccessful) {
+                        EmptyView()
+                    }
+                    .navigationDestination(for: Bool.self) { _ in
+                        LoginV()
+                    }
+                    .hidden()
                 }
+            }
+            .alert(isPresented: $showErrorAlert) {
+                Alert(
+                    title: Text("Registration Failed"),
+                    message: Text(viewModel.errorMessage),
+                    dismissButton: .default(Text("OK"))
+                )
             }
             .navigationBarBackButtonHidden(true) // Hide default back button
         }
@@ -141,6 +156,5 @@ struct RegisterV: View {
 }
 
 
-#Preview {
-    RegisterV()
-}
+
+

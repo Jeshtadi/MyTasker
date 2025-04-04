@@ -16,6 +16,7 @@ import FirebaseAuth
 struct SettingsView: View {
     @StateObject private var viewModel = ProfileVM()
     
+    
     @State private var currentPassword = ""
     @State private var showAlert = false
     @State private var alertMessage = ""

@@ -27,10 +27,10 @@ struct ToDoListitem: Codable, Identifiable {
     var description: String?
     var dueDate: TimeInterval
     var createDate: TimeInterval
-    var duration: TimeInterval?
+//    var duration: TimeInterval?
     var isDone: Bool
     var color: String?
-    var repeatInterval: TimeInterval?
+//    var repeatInterval: TimeInterval?
     var notifyBefore: TimeInterval?
     var isDeleted: Bool = false
     
