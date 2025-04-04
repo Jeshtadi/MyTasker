@@ -260,7 +260,10 @@ struct ImportCalendarView: View {
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
-
+                    .onChange(of: refreshView) { _ in
+                        viewModel.loadEventsFromFirestore()
+                    }
+                    
                     // Navigation link to CalendarView (hidden but activated when navigateToCalendar is true)
                     NavigationLink(destination: CalendarView(), isActive: $navigateToCalendar) {
                         EmptyView()

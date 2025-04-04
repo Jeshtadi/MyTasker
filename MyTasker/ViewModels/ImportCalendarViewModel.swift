@@ -909,7 +909,7 @@ class ImportCalendarViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.events = parsedEvents
                     self.saveEventsToFirestore(events: parsedEvents) {
-                        self.loadEventsFromFirestore()  // Refresh the view after import
+                        self.loadEventsFromFirestore()
                     }
                     self.isLoading = false
                     self.isImportComplete = true
@@ -925,128 +925,29 @@ class ImportCalendarViewModel: ObservableObject {
         }
         task.resume()
     }
-    private func cleanDescription(_ description: String) -> String {
-        var cleanedDescription = description
-
-        // Step 1: Remove escape sequences like \n, \, etc.
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped newlines to actual newlines
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")    // Remove remaining backslashes
-
-        // Step 2: Replace multiple spaces with a single space
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: " {2,}", with: " ", options: .regularExpression)
-
-        // Step 3: Remove unnecessary spaces after line breaks
-        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n{2,}", with: "\n", options: .regularExpression) // Collapse multiple newlines into one
-
-        // Step 4: Trim leading and trailing whitespace
-        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        // Step 5: If there are any HTML tags, remove them (optional)
-        let regex = try? NSRegularExpression(pattern: "<.*?>", options: [])
-        if let regex = regex {
-            cleanedDescription = regex.stringByReplacingMatches(in: cleanedDescription, options: [], range: NSRange(location: 0, length: cleanedDescription.count), withTemplate: "")
-        }
-
-        return cleanedDescription
-    }
-
-    
+  
     
     // works
-//    private func cleanDescription(_ description: String) -> String {
-//        var cleanedDescription = description
-//        
-//        // Step 1: Fix escaped newlines and escape sequences
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n +", with: "") // Remove backslashes
-//        
-//        
-//        // Step 2: Combine broken words (e.g., "mo" + "dule" -> "module")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n([a-zA-Z])", with: "$1", options: .regularExpression) // Combine split words across newlines
-//
-//        // Step 3: Keep bullet points and list formatting unchanged
-//        // Do not replace the bullet point format here
-//        // cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n *", with: "\n• ", options: .regularExpression)
-//
-//        // Step 4: Collapse multiple newlines into one newline
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression) // Collapse multiple newlines into one
-//
-//        // Step 5: Remove extra spaces or non-breaking spaces
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\u{00A0}", with: " ") // Non-breaking space
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: " {2,}", with: " ", options: .regularExpression) // Collapse multiple spaces
-//
-//        // Step 6: Trim leading/trailing whitespace and newlines
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//        
-//        return cleanedDescription
-//    }
+    private func cleanDescription(_ description: String) -> String {
+        var cleanedDescription = description
+        
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n +", with: "")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n([a-zA-Z])", with: "$1", options: .regularExpression)
 
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
 
-//    private func cleanDescription(_ description: String) -> String {
-//        var cleanedDescription = description
-//
-//        // Remove unnecessary leading and trailing whitespaces
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//        // Remove escaped characters (like \n, \, etc.)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "") // Remove backslashes
-//
-//        // Remove newlines and spaces that split words
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "(?<=\\w)\\s+(?=\\w)", with: "", options: .regularExpression) // Remove spaces within words
-//
-//        // Remove any newline characters
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: " ") // Replace all newlines with space
-//
-//        // Replace multiple spaces with a single space
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-//
-//        // Optionally, remove unwanted characters (e.g., special characters or excess punctuation)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "[^a-zA-Z0-9\\s.,-]", with: "", options: .regularExpression)
-//
-//        // Trim any extra leading/trailing spaces that may have been added
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//        return cleanedDescription
-//    }
-    
-//    private func cleanDescription(_ description: String) -> String {
-//        var cleanedDescription = description
-//
-//        // Remove unnecessary leading and trailing whitespaces
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//        // Remove escaped characters (like \n, \, etc.)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\n", with: "\n") // Convert escaped \n to newlines
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\,", with: ",")  // Convert escaped commas
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\;", with: ";")  // Convert escaped semicolons
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\", with: "") // Remove backslashes
-//
-//        // Remove spaces that break words (like "Mo dule" -> "Module")
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "(?<=\\w)\\s+(?=\\w)", with: "", options: .regularExpression)
-//
-//        // Replace multiple spaces with a single space
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-//
-//        // Fix newlines: Replace single newlines with spaces, but leave newlines between distinct sections or paragraphs
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\n", with: " ") // Convert all newlines to space
-//
-//        // Optionally, remove unwanted characters (e.g., special characters or excess punctuation)
-//        cleanedDescription = cleanedDescription.replacingOccurrences(of: "[^a-zA-Z0-9\\s.,-]", with: "", options: .regularExpression)
-//
-//        // Ensure no leading/trailing spaces are left after cleaning
-//        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//        return cleanedDescription
-//    }
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: "\u{00A0}", with: " ")
+        cleanedDescription = cleanedDescription.replacingOccurrences(of: " {2,}", with: " ", options: .regularExpression)
 
+       
+        cleanedDescription = cleanedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return cleanedDescription
+    }
 
 
     
